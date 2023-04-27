@@ -16,10 +16,10 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
     username VARCHAR UNIQUE NOT NULL,
-    PASSWORD VARCHAR NOT NULL
+    password VARCHAR NOT NULL
 );
 
-CREATE TABLE SESSION (
+CREATE TABLE session (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     token VARCHAR UNIQUE NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE post_category (
     PRIMARY KEY (post_id, category_id)
 );
 
-CREATE TABLE COMMENT (
+CREATE TABLE comment (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     post_id INTEGER NOT NULL REFERENCES post(id),
@@ -58,6 +58,6 @@ CREATE TABLE like_dislike (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     post_id INTEGER REFERENCES post(id),
-    comment_id INTEGER REFERENCES COMMENT(id),
-    TYPE TEXT NOT NULL CHECK (TYPE IN ('Like', 'Dislike'))
+    comment_id INTEGER REFERENCES comment(id),
+    islike INTEGER CHECK (islike IN (-1, 0, 1))
 );

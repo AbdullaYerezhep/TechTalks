@@ -3,30 +3,35 @@ package service
 import (
 	"forum/models"
 	"forum/pkg/repository"
-	"log"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Authorization interface {
-	CreateUser(user *models.User) error
-	GetByName(name string) (*models.User, error)
+	CreateUser(user models.User) error
+	GetUser(name string) (models.User, error)
+	GetUserByToken(token string) (models.User, error)
+}
+
+type Session interface {
+	CreateSession(models.Session) error
+	GetSession(token string) (models.Session, error)
+	DeleteSession(id int) error
+}
+
+type Post interface {
+	Create(user_id int, title, content string) error
+	Get(title string) (models.Post, error)
+	Delete(id int) error
+	Update(id int, newTitle, newContent string) error
 }
 
 type Service struct {
 	Authorization
+	Session
 }
 
 func New(repo *repository.Repository) *Service {
 	return &Service{
-		Authorization: repo,
+		Authorization: NewAuth(repo.Authorization),
+		Session:       NewSession(repo.Session),
 	}
-}
-
-func getHash(pass string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pass), 0)
-	if err != nil {
-		log.Fatal("Hashing error")
-	}
-	return string(hash)
 }

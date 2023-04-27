@@ -24,7 +24,7 @@ func main() {
 		errLog.Fatal(err.Error())
 		return
 	}
-	infoLog.Println("Database creation: SUCSESS")
+	infoLog.Println("Database creation: SUCCESS")
 
 	// repository - is a layer of the project, which contains all database transactions
 	// takes [data] from service and does transactions | repository[data] => transaction[data]

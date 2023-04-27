@@ -8,7 +8,18 @@
 </head>
 <body>
     <header>
-        {{if .Name}}{{.Name}}{{else}}Login{{end}}
+        <button class="profile">{{if .Name}}{{.Name}}{{else}}Login{{end}}</button>
     </header>
+    <section>
+        <div class="Category-container">{{.Topics}}</div>
+        <div class="Post-container">
+            {{range .Posts}}
+            <div class="post-title">{{.Title}}</div>
+            <div class="post-content">{{.Content}}</div>
+            <div class="post-author">{{.Author}}</div>
+            <div class="post-date">{{.Created}}</div>
+            {{end}}
+        </div>
+    </section>
 </body>
 </html>
