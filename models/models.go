@@ -24,6 +24,7 @@ type Category struct {
 type Post struct {
 	ID       int
 	User_ID  int
+	Author   string
 	Category string
 	Title    string
 	Content  string

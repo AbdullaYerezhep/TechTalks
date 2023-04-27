@@ -5,16 +5,11 @@ import (
 )
 
 func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("token")
+	posts, err := h.srv.GetAllPosts()
 	if err != nil {
 		h.errLog.Println(err.Error())
-		http.Error(w, "ISE", http.StatusInternalServerError)
+		h.errorMsg(w, http.StatusInternalServerError, "error", "")
 		return
 	}
-	user, err := h.srv.GetUserByToken(cookie.Value)
-	if err != nil {
-		h.errLog.Println(err.Error())
-		return
-	}
-	templates["home"].Execute(w, user)
+	templates["home"].Execute(w, posts)
 }

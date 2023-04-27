@@ -34,10 +34,11 @@ CREATE TABLE category (
 CREATE TABLE post (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
+    author VARCHAR NOT NULL,
     title VARCHAR NOT NULL,
     content TEXT NOT NULL,
-    created_at DATETIME,
-    updated_at DATETIME
+    created DATETIME,
+    updated DATETIME
 );
 
 CREATE TABLE post_category (
@@ -51,7 +52,8 @@ CREATE TABLE comment (
     user_id INTEGER NOT NULL REFERENCES user(id),
     post_id INTEGER NOT NULL REFERENCES post(id),
     content TEXT NOT NULL,
-    created_at DATETIME
+    created DATETIME
+    updated DATETIME
 );
 
 CREATE TABLE like_dislike (

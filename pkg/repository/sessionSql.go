@@ -22,16 +22,20 @@ func (r *SessionSQL) CreateSession(s models.Session) error {
 	}
 	_, err = statement.Exec(s.UserId, s.Token, s.Expiration_date)
 	return err
-
 }
 
 func (r *SessionSQL) GetSession(token string) (models.Session, error) {
 	var session models.Session
-	err := r.db.QueryRow("SELECT id, user_id, token, expiration_date FROM session WHERE token = ?", token).Scan(&session.ID, &session.UserId, &session.Token, &session.Expiration_date)
+	row := r.db.QueryRow("SELECT id, user_id, token, expiration_date FROM session WHERE token = ?", token)
+	err := row.Scan(&session.ID, &session.UserId, &session.Token, &session.Expiration_date)
 	return session, err
 }
 
 func (r *SessionSQL) DeleteSession(id int) error {
-	r.db.QueryRow("DELETE id, user_id token, expiration_date FROM session WHERE user_id = ?", id)
-	return nil
+	stmt, err := r.db.Prepare("DELETE FROM session WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(id)
+	return err
 }

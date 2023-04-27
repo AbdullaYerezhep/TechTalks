@@ -11,7 +11,6 @@ import (
 )
 
 func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 
 	case http.MethodGet:
@@ -42,12 +41,6 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
-
-		c := &http.Cookie{
-			Name:  "Name",
-			Value: user.Name,
-		}
-		http.SetCookie(w, c)
 		http.Redirect(w, r, "/sign-in", http.StatusFound)
 
 	default:
@@ -58,15 +51,10 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 
 	case http.MethodGet:
-		cookie, err := r.Cookie("username")
-		if err != nil {
-			h.errLog.Println(err.Error())
-		}
-		templates["sign-in"].Execute(w, cookie)
+		templates["sign-in"].Execute(w, nil)
 
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
@@ -115,7 +103,7 @@ func newSession(user_id int) models.Session {
 	s.UserId = user_id
 	token, _ := uuid.NewV4()
 	s.Token = token.String()
-	s.Expiration_date = time.Now().Add(1 * time.Minute)
+	s.Expiration_date = time.Now().Add(1 * time.Hour)
 	return s
 }
 

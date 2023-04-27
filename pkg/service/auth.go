@@ -20,6 +20,10 @@ func (s *AuthService) CreateUser(u models.User) error {
 	return s.repo.CreateUser(u)
 }
 
+func (s *AuthService) GetUserByID(id int) (models.User, error) {
+	return s.repo.GetUserByID(id)
+}
+
 func (s *AuthService) GetUser(name string) (models.User, error) {
 	return s.repo.GetUser(name)
 }
