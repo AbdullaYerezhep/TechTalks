@@ -4,20 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
     <title>Forum</title>
 </head>
 <body>
-    <header>
-        <button class="profile">{{if .Name}}{{.Name}}{{else}}Login{{end}}</button>
-    </header>
+   <header>
+    <button class="profile">{{if .User.Name}}{{.User.Name}}{{else}} <a href="sign-in">Login</a>{{end}}</button>
+    <a href="/post/add" class="new-post">+</a>
+   </header>
     <section>
-        <div class="Category-container">{{.Topics}}</div>
-        <div class="Post-container">
-            {{range .}}
-            <div class="post-title">{{.Title}}</div>
-            <div class="post-content">{{.Content}}</div>
-            <div class="post-author">{{.Author}}</div>
-            <div class="post-date">{{.Created}}</div>
+        <div class="post-container">
+            {{range .Posts }}
+            <div class="post">
+                <div class="post-title">{{ .Title }}</div>
+                <div class="post-content">{{.Content}}</div>
+                <div class="post-author">{{.Author}}</div>
+                <div class="post-date">Created at: {{.Created}}</div>
+                <div class="post-update">Last update: {{.Updated}}</div>
+                {{if eq $.User.ID .User_ID}}
+                <a href="/post/update/?id={{.ID}}">Change</a>
+                <a href="/post/delete/?id={{.ID}}">Delete</a>
+                {{end}}
+            </div>
+            {{else}}
+            <p>No posts found</p>
             {{end}}
         </div>
     </section>

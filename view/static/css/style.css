@@ -1,0 +1,112 @@
+/* Set global font family and color */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Set header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #eee;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+section {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.profile {
+  background-color: #fff;
+  border: 2px solid #333;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.new-post {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  font-size: 2rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 25%;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+/* Set post styles */
+.post-container {
+    margin: 2rem auto;
+}
+
+.post {
+    margin: 0 auto;
+  max-width: 1200px;
+  max-height: 500px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  margin: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: #fff;
+}
+
+.post-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.post-content {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-author {
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.post-date {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}

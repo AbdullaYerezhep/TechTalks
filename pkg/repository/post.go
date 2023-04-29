@@ -16,11 +16,11 @@ func NewPostSQL(db *sql.DB) *PostSQL {
 }
 
 func (r *PostSQL) CreatePost(p models.Post) error {
-	stmt, err := r.db.Prepare("INSERT INTO post (user_id, author, title, content, created) values (?, ?, ?, ?, ?)")
+	stmt, err := r.db.Prepare("INSERT INTO post (user_id, author, title, content, created, updated) values (?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(p.User_ID, p.Author, p.Title, p.Content, p.Created)
+	_, err = stmt.Exec(p.User_ID, p.Author, p.Title, p.Content, p.Created, p.Updated)
 	return err
 }
 

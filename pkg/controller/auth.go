@@ -77,13 +77,12 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		}
 
 		s := newSession(user.ID)
-
 		err = h.srv.CreateSession(s)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		h.infoLog.Println("Session created")
+		h.infoLog.Println("Session created: ", user.Name)
 
 		c := &http.Cookie{
 			Name:  "token",

@@ -1,18 +1,18 @@
-DROP TABLE IF EXISTS `users`;
+-- DROP TABLE IF EXISTS `users`;
 
 DROP TABLE IF EXISTS `session`;
 
 DROP TABLE IF EXISTS `category`;
 
-DROP TABLE IF EXISTS `post`;
+-- DROP TABLE IF EXISTS `post`;
 
-DROP TABLE IF EXISTS `post_category`;
+-- DROP TABLE IF EXISTS `post_category`;
 
 DROP TABLE IF EXISTS `comment`;
 
 DROP TABLE IF EXISTS `like_dislike`;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
     username VARCHAR UNIQUE NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE category (
     name VARCHAR NOT NULL
 );
 
-CREATE TABLE post (
+CREATE TABLE IF NOT EXISTS post (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     author VARCHAR NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE post (
     updated DATETIME
 );
 
-CREATE TABLE post_category (
+CREATE TABLE IF NOT EXISTS post_category (
     post_id INTEGER NOT NULL REFERENCES post(id),
     category_id INTEGER NOT NULL REFERENCES category(id),
     PRIMARY KEY (post_id, category_id)
