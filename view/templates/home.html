@@ -10,6 +10,7 @@
 <body>
    <header>
     <button class="profile">{{if .User.Name}}{{.User.Name}}{{else}} <a href="sign-in">Login</a>{{end}}</button>
+    {{if .User.Name}}<button class="profile"><a href="/logout">Logout</a> </button>{{end}}
     <a href="/post/add" class="new-post">+</a>
    </header>
     <section>
@@ -19,8 +20,8 @@
                 <div class="post-title">{{ .Title }}</div>
                 <div class="post-content">{{.Content}}</div>
                 <div class="post-author">{{.Author}}</div>
-                <div class="post-date">Created at: {{.Created}}</div>
-                <div class="post-update">Last update: {{.Updated}}</div>
+                <div class="post-date">Created at: {{.CreatedStr}}</div>
+                <div class="post-update">Last update: {{.UpdatedStr}}</div>
                 {{if eq $.User.ID .User_ID}}
                 <a href="/post/update/?id={{.ID}}">Change</a>
                 <a href="/post/delete/?id={{.ID}}">Delete</a>

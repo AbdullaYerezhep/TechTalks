@@ -26,6 +26,7 @@ func (h *Handler) Router() *http.ServeMux {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/sign-in", h.signIn)
 	mux.HandleFunc("/sign-up", h.signUp)
+	mux.HandleFunc("/logout", h.checkAccess(h.logOut, 0))
 	mux.HandleFunc("/", h.checkAccess(h.home, 0))
 	mux.HandleFunc("/post/add", h.checkAccess(h.addPost, 1))
 	mux.HandleFunc("/post/update/", h.checkAccess(h.updatePost, 1))

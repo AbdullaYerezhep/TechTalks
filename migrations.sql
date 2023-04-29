@@ -1,6 +1,6 @@
 -- DROP TABLE IF EXISTS `users`;
 
-DROP TABLE IF EXISTS `session`;
+-- DROP TABLE IF EXISTS `session`;
 
 DROP TABLE IF EXISTS `category`;
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR NOT NULL
 );
 
-CREATE TABLE session (
+CREATE TABLE IF NOT EXISTS session (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     token VARCHAR UNIQUE NOT NULL,

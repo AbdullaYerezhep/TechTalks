@@ -44,6 +44,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 		if err != nil {
 			return nil, err
 		}
+		post.TimeToStr()
 		posts = append(posts, post)
 	}
 	if err = rows.Err(); err != nil {
@@ -53,7 +54,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 }
 
 func (r *PostSQL) UpdatePost(p models.Post) error {
-	stmt, err := r.db.Prepare("UPDATE post SET title = ?, content = ?, updated = ? where id = ?")
+	stmt, err := r.db.Prepare("UPDATE post SET title = ?, content = ?, updated = ? WHERE id = ?")
 	if err != nil {
 		return err
 	}

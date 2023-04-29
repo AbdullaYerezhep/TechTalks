@@ -24,14 +24,16 @@ type Category struct {
 }
 
 type Post struct {
-	ID       int
-	User_ID  int
-	Author   string
-	Category string
-	Title    string
-	Content  string
-	Created  time.Time
-	Updated  time.Time
+	ID         int
+	User_ID    int
+	Author     string
+	Category   string
+	Title      string
+	Content    string
+	Created    time.Time
+	CreatedStr string
+	Updated    time.Time
+	UpdatedStr string
 }
 
 type PostCategory struct {
@@ -52,4 +54,9 @@ type LikeDis struct {
 	Post_ID    int
 	Comment_ID int
 	IsLike     int8
+}
+
+func (p *Post) TimeToStr() {
+	p.CreatedStr = p.Created.Format(time.DateTime)
+	p.UpdatedStr = p.Updated.Format(time.DateTime)
 }

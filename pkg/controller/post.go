@@ -13,7 +13,7 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 		templates["addpost"].Execute(w, nil)
 
 	case http.MethodPost:
-		w.Header().Set("Content-type", "")
+		currentTime := time.Now()
 		if err := r.ParseForm(); err != nil {
 			h.errLog.Println(err.Error())
 			h.errorMsg(w, http.StatusBadRequest, "error", "Form modified")
@@ -32,8 +32,8 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 			Title:   r.FormValue("title"),
 			Author:  user.Name,
 			Content: r.FormValue("content"),
-			Created: time.Now(),
-			Updated: time.Now(),
+			Created: currentTime,
+			Updated: currentTime,
 		}
 		if err = h.srv.CreatePost(post); err != nil {
 			h.errLog.Println(err.Error())
@@ -53,6 +53,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusBadRequest, "error", "")
 		return
 	}
+
 	switch r.Method {
 
 	case http.MethodGet:
@@ -78,6 +79,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if post.User_ID != id.(int) {
+			h.errorMsg(w, http.StatusBadRequest, "error", "")
 			return
 		}
 		post.Title = r.FormValue("title")
@@ -89,7 +91,6 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
 		return
 	}
-
 }
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +106,7 @@ func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if id.(int) != post.User_ID {
-		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+		h.errorMsg(w, http.StatusBadRequest, "error", "")
 		return
 	}
 

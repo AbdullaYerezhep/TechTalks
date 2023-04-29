@@ -17,8 +17,9 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("token")
 		if err != nil {
-			h.infoLog.Println(err.Error())
+			h.errLog.Println(err.Error())
 			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 			return
 		}
 		session, err := h.srv.Session.GetSession(token.Value)

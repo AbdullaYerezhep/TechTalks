@@ -27,6 +27,7 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusInternalServerError, "error", "")
 		return
 	}
+
 	data.Posts = posts
 	if err = templates["home"].Execute(w, data); err != nil {
 		h.errLog.Println(err.Error())
