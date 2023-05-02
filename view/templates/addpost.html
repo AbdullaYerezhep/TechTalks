@@ -9,12 +9,19 @@
 </head>
 <body>
     <form method="POST">
-        <label for="form-title">Title:</label>
-        <input type="text" id="form-title" name="title"><br>
-      
-        <label for="form-content">Content:</label>
-        <textarea id="form-content" name="content"></textarea><br>
-      
+        <label for="post-title">Title:</label>
+        <input type="text" id="post-title" name="title"><br>
+
+        <div class="category">    
+            {{range .Categories}}
+            <input type="checkbox" id="category" name="category[]" value="{{.}}">
+            <label for="category">{{.}}</label>
+            {{end}}
+        </div>
+
+        <label for="post-content">Content:</label>
+        <textarea id="post-content" name="content"></textarea><br>
+        
         <button type="submit">Submit</button>
       </form>
       

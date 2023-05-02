@@ -2,8 +2,6 @@ package controller
 
 import (
 	"errors"
-	"forum/models"
-	"net/url"
 	"regexp"
 	"unicode"
 )
@@ -12,25 +10,6 @@ const (
 	nameRegExp  = `^[a-zA-Z0-9_.'-]{3,15}$`
 	emailRegExp = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,29}$`
 )
-
-func decodeForm(form url.Values) (models.User, error) {
-	var u models.User
-	name, okName := form["username"]
-	email, okEmail := form["email"]
-	password, okPass := form["password"]
-	confirmPass, okConfirm := form["confirmPass"]
-	if !okName || !okEmail || !okPass || !okConfirm {
-		return u, errors.New("form modified")
-	}
-	if err := validateNewUserData(name[0], email[0], password[0], confirmPass[0]); err != nil {
-		return u, err
-	}
-	u.Name = name[0]
-	u.Email = email[0]
-	u.Password = password[0]
-
-	return u, nil
-}
 
 func validateNewUserData(name, email, password, confirmPass string) error {
 	if !isAscii(name) || !isAscii(password) || !isAscii(password) {
@@ -42,10 +21,7 @@ func validateNewUserData(name, email, password, confirmPass string) error {
 	if !isValidEmail(email) {
 		return errors.New("invalid email")
 	}
-	if !isValidPassword(password, confirmPass) {
-		return errors.New("invalid password")
-	}
-	return nil
+	return isValidPassword(password, confirmPass)
 }
 
 func isAscii(s string) bool {
@@ -67,11 +43,18 @@ func isValidEmail(email string) bool {
 	return re.MatchString(email)
 }
 
-func isValidPassword(password, confirmPass string) bool {
-	// re := regexp.MustCompile(passRegExp)
-	// return re.MatchString(password)
-	if len(password) < 8 || len(password) > 25 {
-		return false
+func isValidPassword(password, confirmPass string) error {
+	var err error
+	match1, _ := regexp.MatchString("[A-Z]", password)
+	match2, _ := regexp.MatchString("[a-z]", password)
+	match3, _ := regexp.MatchString("[~!@#$%^&*_()-+={[}]|\\:;\"'<,>.?/]", password)
+
+	if !match1 || !match2 || !match3 {
+		return errors.New("invalid password")
 	}
-	return password == confirmPass
+
+	if confirmPass != password {
+		err = errors.New("confirmation failed")
+	}
+	return err
 }

@@ -15,7 +15,8 @@ type Authorization interface {
 type Session interface {
 	CreateSession(models.Session) error
 	GetSession(token string) (models.Session, error)
-	DeleteSession(id int) error
+	// UpdateSession(models.Session) error
+	DeleteSession(user_id int) error
 }
 
 type Post interface {
@@ -26,10 +27,21 @@ type Post interface {
 	DeletePost(id int) error
 }
 
+type Category interface {
+	GetCategories() ([]string, error)
+}
+
+type Comment interface {
+	AddComment(models.Comment) error
+	UpdateComment(id int) error
+	DeleteComment(id int) error
+}
+
 type Repository struct {
 	Authorization
 	Session
 	Post
+	Category
 }
 
 func New(db *sql.DB) *Repository {
@@ -37,5 +49,6 @@ func New(db *sql.DB) *Repository {
 		Authorization: NewAuthSQL(db),
 		Session:       NewSessionSQL(db),
 		Post:          NewPostSQL(db),
+		Category:      NewCategorySQL(db),
 	}
 }

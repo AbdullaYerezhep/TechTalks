@@ -31,11 +31,20 @@ func (r *SessionSQL) GetSession(token string) (models.Session, error) {
 	return session, err
 }
 
-func (r *SessionSQL) DeleteSession(id int) error {
-	stmt, err := r.db.Prepare("DELETE FROM session WHERE id = ?")
+// func (r *SessionSQL) UpdateSession(s models.Session) error {
+// 	stmt, err := r.db.Prepare("UPDATE session SET token = ?, expiration_date = ? WHERE user_id = ?")
+// 	if err != nil {
+// 		return err
+// 	}
+// 	_, err = stmt.Exec(s.Token, s.Expiration_date)
+// 	return err
+// }
+
+func (r *SessionSQL) DeleteSession(user_id int) error {
+	stmt, err := r.db.Prepare("DELETE FROM session WHERE user_id = ?")
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(id)
+	_, err = stmt.Exec(user_id)
 	return err
 }

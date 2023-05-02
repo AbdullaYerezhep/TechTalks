@@ -7,7 +7,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user models.User) error
-	GetUser(name string) (models.User, error)
+	GetUser(name, password string) (models.User, error)
 	GetUserByID(id int) (models.User, error)
 	GetUserByToken(token string) (models.User, error)
 }
@@ -15,7 +15,7 @@ type Authorization interface {
 type Session interface {
 	CreateSession(models.Session) error
 	GetSession(token string) (models.Session, error)
-	DeleteSession(id int) error
+	DeleteSession(user_id int) error
 }
 
 type Post interface {
@@ -24,6 +24,7 @@ type Post interface {
 	GetAllPosts() ([]models.Post, error)
 	UpdatePost(p models.Post) error
 	DeletePost(id int) error
+	GetCategories() ([]string, error)
 }
 
 type Service struct {
@@ -36,6 +37,6 @@ func New(repo *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuth(repo.Authorization),
 		Session:       NewSession(repo.Session),
-		Post:          NewPost(repo.Post),
+		Post:          NewPost(repo.Post, repo.Category),
 	}
 }

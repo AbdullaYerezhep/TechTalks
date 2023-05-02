@@ -2,11 +2,11 @@
 
 -- DROP TABLE IF EXISTS `session`;
 
-DROP TABLE IF EXISTS `category`;
+-- DROP TABLE IF EXISTS `category`; 
 
--- DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `post`;
 
--- DROP TABLE IF EXISTS `post_category`;
+DROP TABLE IF EXISTS `post_category`;
 
 DROP TABLE IF EXISTS `comment`;
 
@@ -21,15 +21,24 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS session (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES user(id),
+    user_id INTEGER UNIQUE NOT NULL REFERENCES user(id),
     token VARCHAR UNIQUE NOT NULL,
     expiration_date DATETIME
 );
 
-CREATE TABLE category (
+CREATE TABLE IF NOT EXISTS category (
     id INTEGER PRIMARY KEY,
-    name VARCHAR NOT NULL
+    name VARCHAR UNIQUE NOT NULL
 );
+
+INSERT OR IGNORE INTO category (name) 
+SELECT 'Movies' UNION ALL
+SELECT 'Games' UNION ALL
+SELECT 'Anime' UNION ALL
+SELECT 'Cartoons' UNION ALL
+SELECT 'Books' UNION ALL
+SELECT 'Comix' UNION ALL
+SELECT 'Manga';
 
 CREATE TABLE IF NOT EXISTS post (
     id INTEGER PRIMARY KEY,
@@ -42,24 +51,23 @@ CREATE TABLE IF NOT EXISTS post (
 );
 
 CREATE TABLE IF NOT EXISTS post_category (
-    post_id INTEGER NOT NULL REFERENCES post(id),
-    category_id INTEGER NOT NULL REFERENCES category(id),
-    PRIMARY KEY (post_id, category_id)
+    post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
+    category_id INTEGER NOT NULL REFERENCES category(id)
 );
 
-CREATE TABLE comment (
+CREATE TABLE IF NOT EXISTS comment (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
-    post_id INTEGER NOT NULL REFERENCES post(id),
+    post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     created DATETIME
     updated DATETIME
 );
 
-CREATE TABLE like_dislike (
+CREATE TABLE IF NOT EXISTS like_dislike (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
-    post_id INTEGER REFERENCES post(id),
+    post_id INTEGER REFERENCES post(id) ON DELETE CASCADE,
     comment_id INTEGER REFERENCES comment(id),
     islike INTEGER CHECK (islike IN (-1, 0, 1))
 );

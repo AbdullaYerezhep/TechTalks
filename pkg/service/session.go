@@ -16,6 +16,7 @@ func NewSession(repo repository.Session) *SessionService {
 }
 
 func (s *SessionService) CreateSession(session models.Session) error {
+	s.repo.DeleteSession(session.UserId)
 	return s.repo.CreateSession(session)
 }
 
@@ -23,6 +24,6 @@ func (s *SessionService) GetSession(token string) (models.Session, error) {
 	return s.repo.GetSession(token)
 }
 
-func (s *SessionService) DeleteSession(id int) error {
-	return s.repo.DeleteSession(id)
+func (s *SessionService) DeleteSession(user_id int) error {
+	return s.repo.DeleteSession(user_id)
 }

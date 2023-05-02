@@ -5,13 +5,8 @@ import (
 	"net/http"
 )
 
-type HomeData struct {
-	User  models.User
-	Posts []models.Post
-}
-
 func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
-	var data HomeData
+	var data models.DataList
 	id := r.Context().Value(ctxKey("user_id"))
 	if id != nil {
 		user, err := h.srv.GetUserByID(id.(int))

@@ -18,7 +18,10 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 		token, err := r.Cookie("token")
 		if err != nil {
 			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+			if mode == defaultMode {
+				next.ServeHTTP(w, r)
+				return
+			}
 			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 			return
 		}
@@ -32,7 +35,7 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 			return
 		}
 		if session.Expiration_date.Before(time.Now()) {
-			err = h.srv.Session.DeleteSession(session.ID)
+			err = h.srv.Session.DeleteSession(session.UserId)
 			if err != nil {
 				h.errLog.Println(err.Error())
 				h.errorMsg(w, http.StatusInternalServerError, "error", "")

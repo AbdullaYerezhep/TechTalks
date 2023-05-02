@@ -1,12 +1,13 @@
 package controller
 
 import (
+	"errors"
 	"forum/models"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/gofrs/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
@@ -63,15 +64,16 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("username")
 		password := r.FormValue("password")
 
-		user, err := h.srv.GetUser(name)
-		if err != nil || !verifyPass(password, user.Password) {
-			h.errorMsg(w, http.StatusBadRequest, "sign-in", "Invalid data")
+		user, err := h.srv.GetUser(name, password)
+		if err != nil {
+			h.errorMsg(w, http.StatusBadRequest, "sign-in", "User not found!")
 			return
 		}
 
 		s := newSession(user.ID)
 		err = h.srv.CreateSession(s)
 		if err != nil {
+			h.errLog.Println(err.Error())
 			h.errorMsg(w, http.StatusInternalServerError, "error", "")
 			return
 		}
@@ -82,7 +84,8 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 			Value: s.Token,
 		}
 		http.SetCookie(w, c)
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 
 	default:
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
@@ -91,22 +94,14 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxKey("user_id"))
-	user, err := h.srv.GetUserByID(id.(int))
-	if err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusInternalServerError, "error", "")
-		return
-	}
-	// get session by user id zhazau kerek
-	err = h.srv.DeleteSession(user.ID)
+	user_id := r.Context().Value(ctxKey("user_id"))
+	err := h.srv.DeleteSession(user_id.(int))
 	if err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusInternalServerError, "error", "")
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
-	return
 }
 
 func newSession(user_id int) models.Session {
@@ -118,7 +113,21 @@ func newSession(user_id int) models.Session {
 	return s
 }
 
-func verifyPass(pass, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(pass))
-	return err == nil
+func decodeForm(form url.Values) (models.User, error) {
+	var u models.User
+	name, okName := form["username"]
+	email, okEmail := form["email"]
+	password, okPass := form["password"]
+	confirmPass, okConfirm := form["confirmPass"]
+	if !okName || !okEmail || !okPass || !okConfirm {
+		return u, errors.New("form modified")
+	}
+	if err := validateNewUserData(name[0], email[0], password[0], confirmPass[0]); err != nil {
+		return u, err
+	}
+	u.Name = name[0]
+	u.Email = email[0]
+	u.Password = password[0]
+
+	return u, nil
 }
