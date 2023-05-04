@@ -4,9 +4,9 @@
 
 -- DROP TABLE IF EXISTS `category`; 
 
-DROP TABLE IF EXISTS `post`;
+-- DROP TABLE IF EXISTS `post`;
 
-DROP TABLE IF EXISTS `post_category`;
+-- DROP TABLE IF EXISTS `post_category`;
 
 DROP TABLE IF EXISTS `comment`;
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS post (
 
 CREATE TABLE IF NOT EXISTS post_category (
     post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
-    category_id INTEGER NOT NULL REFERENCES category(id)
+    category_name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comment (
@@ -68,6 +68,5 @@ CREATE TABLE IF NOT EXISTS like_dislike (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES user(id),
     post_id INTEGER REFERENCES post(id) ON DELETE CASCADE,
-    comment_id INTEGER REFERENCES comment(id),
-    islike INTEGER CHECK (islike IN (-1, 0, 1))
+    islike INTEGER CHECK (islike IN (0, 1))
 );

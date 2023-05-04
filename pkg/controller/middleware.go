@@ -17,7 +17,6 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("token")
 		if err != nil {
-			h.errLog.Println(err.Error())
 			if mode == defaultMode {
 				next.ServeHTTP(w, r)
 				return

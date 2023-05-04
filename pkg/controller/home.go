@@ -6,7 +6,7 @@ import (
 )
 
 func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
-	var data models.DataList
+	var data models.HomePage
 	id := r.Context().Value(ctxKey("user_id"))
 	if id != nil {
 		user, err := h.srv.GetUserByID(id.(int))
@@ -22,7 +22,6 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusInternalServerError, "error", "")
 		return
 	}
-
 	data.Posts = posts
 	if err = templates["home"].Execute(w, data); err != nil {
 		h.errLog.Println(err.Error())

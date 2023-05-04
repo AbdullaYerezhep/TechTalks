@@ -25,6 +25,7 @@ type Post interface {
 	GetAllPosts() ([]models.Post, error)
 	UpdatePost(p models.Post) error
 	DeletePost(id int) error
+	LikeDis(user_id, post_id, isLike int) error
 }
 
 type Category interface {

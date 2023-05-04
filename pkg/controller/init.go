@@ -7,6 +7,15 @@ import (
 	"path/filepath"
 )
 
+const (
+	errorTemp   = "error"
+	signInTemp  = "sign-in"
+	signUpTemp  = "sign-up"
+	homeTemp    = "home"
+	postTemp    = "post"
+	addPostTemp = "addPost"
+)
+
 var templates = make(map[string]*template.Template)
 
 func init() {

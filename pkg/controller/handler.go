@@ -21,7 +21,6 @@ func New(info, err *log.Logger, srv *service.Service) *Handler {
 }
 
 func (h *Handler) Router() *http.ServeMux {
-
 	mux := http.NewServeMux()
 
 	fs := http.FileServer(http.Dir("./view/static"))
@@ -34,11 +33,13 @@ func (h *Handler) Router() *http.ServeMux {
 	mux.HandleFunc("/post/add", h.checkAccess(h.addPost, 1))
 	mux.HandleFunc("/post/update/", h.checkAccess(h.updatePost, 1))
 	mux.HandleFunc("/post/delete/", h.checkAccess(h.deletePost, 1))
+	mux.HandleFunc("/post/like/", h.checkAccess(h.likePost, 1))
+	mux.HandleFunc("/post/dislike/", h.checkAccess(h.dislikePost, 1))
 	mux.HandleFunc("/post/comment", h.checkAccess(h.addComment, 1))
 	mux.HandleFunc("/post/comment/get/", h.checkAccess(h.getComment, 1))
 	mux.HandleFunc("/post/comment/update/", h.checkAccess(h.updateComment, 1))
 	mux.HandleFunc("/post/comment/delete/", h.checkAccess(h.deleteComment, 1))
-	mux.HandleFunc("/post/comment/like/", h.checkAccess(h.likeDis, 1))
+	// mux.HandleFunc("/post/comment/like/", h.checkAccess(h.likeDis, 1))
 
 	return mux
 }

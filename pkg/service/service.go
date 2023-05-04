@@ -25,6 +25,7 @@ type Post interface {
 	UpdatePost(p models.Post) error
 	DeletePost(id int) error
 	GetCategories() ([]string, error)
+	LikeDis(user_id, post_id, islike int) error
 }
 
 type Service struct {

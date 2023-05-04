@@ -17,6 +17,11 @@
         <div class="post-container">
             {{range .Posts }}
             <div class="post">
+                <div class="post-categories">
+                    {{range .Category}}
+                    <div class="post-category">{{.}}</div>
+                    {{end}}
+                </div>
                 <div class="post-title">{{ .Title }}</div>
                 <div class="post-content">{{.Content}}</div>
                 <div class="post-author">{{.Author}}</div>
@@ -26,10 +31,13 @@
                 <a href="/post/update/?id={{.ID}}">Change</a>
                 <a href="/post/delete/?id={{.ID}}">Delete</a>
                 {{end}}
+                <a href="/post/like/?id={{.ID}}"><img class="like" src="/static/images/like.svg" alt=""></a>
+                <a href="/post/dislike/?id={{.ID}}">dislike</a>
             </div>
             {{else}}
             <p>No posts found</p>
             {{end}}
+            
         </div>
     </section>
 </body>

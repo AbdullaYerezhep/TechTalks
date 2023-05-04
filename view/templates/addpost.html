@@ -13,7 +13,7 @@
         <input type="text" id="post-title" name="title"><br>
 
         <div class="category">    
-            {{range .Categories}}
+            {{range .}}
             <input type="checkbox" id="category" name="category[]" value="{{.}}">
             <label for="category">{{.}}</label>
             {{end}}

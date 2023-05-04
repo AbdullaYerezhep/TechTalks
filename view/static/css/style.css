@@ -1,103 +1,156 @@
-/* Set global font family and color */
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles */
 body {
-    font-family: Arial, sans-serif;
-    color: #333;
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
 }
 
-/* Set header styles */
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+h1, h2, h3 {
+  margin: 10px 0;
+}
+
+/* Header styles */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #eee;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-section {
-    max-width: 1600px;
-    margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .profile {
-  background-color: #fff;
-  border: 2px solid #333;
-  padding: 0.5rem 1rem;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.profile:hover {
+  background-color: #555;
 }
 
 .new-post {
-  display: inline-block;
   background-color: #333;
   color: #fff;
-  font-size: 2rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 25%;
-  text-decoration: none;
-  margin-left: 1rem;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-/* Set post styles */
+.new-post:hover {
+  background-color: #555;
+}
+
+/* Post styles */
 .post-container {
-    margin: 2rem auto;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
 }
 
 .post {
-    margin: 0 auto;
-  max-width: 1200px;
-  max-height: 500px;
-  overflow: hidden;
-  border: 1px solid #ccc;
-  margin: 1rem;
-  padding: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   background-color: #fff;
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-categories {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.post-category {
+  background-color: #eee;
+  color: #333;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .post-title {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 
 .post-content {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 
 .post-author {
-  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.post-date, .post-update {
   font-style: italic;
-  margin-bottom: 0.5rem;
-}
-
-.post-date {
   font-size: 0.8rem;
-  color: #666;
-  margin-top: 0.5rem;
+  margin-bottom: 10px;
 }
 
+.post-update {
+  color: #aaa;
+}
+
+.post a {
+  margin-right: 10px;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.post a:hover {
+  color: #555;
+}
 
 form {
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
 }
 
 label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
+  font-size: 18px;
+  margin: 10px 0;
 }
 
 input[type="text"],
+input[type="password"],
 textarea {
-  width: 100%;
   padding: 10px;
+  font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.category label {
+  font-size: 16px;
 }
 
 button[type="submit"] {
@@ -106,7 +159,15 @@ button[type="submit"] {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
+  font-size: 18px;
+  margin-top: 10px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 20px;
+}
+
+button[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+.like {
+  max-width: 20px;
 }

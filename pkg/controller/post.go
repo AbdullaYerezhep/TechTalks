@@ -10,9 +10,9 @@ import (
 func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		var data models.DataList
-		data.Categories, _ = h.srv.Post.GetCategories()
-		templates["addpost"].Execute(w, data)
+		var categories []string
+		categories, _ = h.srv.Post.GetCategories()
+		templates["addpost"].Execute(w, categories)
 
 	case http.MethodPost:
 		id := r.Context().Value(ctxKey("user_id"))

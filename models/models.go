@@ -32,6 +32,7 @@ type Post struct {
 	Content    string
 	Created    time.Time
 	Updated    time.Time
+	Comments   int
 	Likes      int
 	Dislikes   int
 	CreatedStr string
@@ -60,11 +61,9 @@ type LikeDis struct {
 	IsLike     int8
 }
 
-type DataList struct {
-	User       User
-	Posts      []Post
-	Categories []string
-	Comments   []Comment
+type HomePage struct {
+	User
+	Posts []Post
 }
 
 func (p *Post) TimeToStr() {

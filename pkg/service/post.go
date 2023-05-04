@@ -49,6 +49,10 @@ func (s *PostService) DeletePost(id int) error {
 	return s.repo.DeletePost(id)
 }
 
+func (s *PostService) LikeDis(user_id, post_id, isLike int) error {
+	return s.repo.LikeDis(user_id, post_id, isLike)
+}
+
 func containsAll(list, target []string) bool {
 	for i := range list {
 		contains := false
