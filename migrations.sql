@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON;
 -- DROP TABLE IF EXISTS `users`;
 
 -- DROP TABLE IF EXISTS `session`;
@@ -10,7 +11,7 @@
 
 DROP TABLE IF EXISTS `comment`;
 
-DROP TABLE IF EXISTS `like_dislike`;
+DROP TABLE IF EXISTS `post_rating`;
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
@@ -20,8 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS session (
-    id INTEGER PRIMARY KEY,
-    user_id INTEGER UNIQUE NOT NULL REFERENCES user(id),
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     token VARCHAR UNIQUE NOT NULL,
     expiration_date DATETIME
 );
@@ -42,7 +42,7 @@ SELECT 'Manga';
 
 CREATE TABLE IF NOT EXISTS post (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES user(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
     author VARCHAR NOT NULL,
     title VARCHAR NOT NULL,
     content TEXT NOT NULL,
@@ -57,16 +57,23 @@ CREATE TABLE IF NOT EXISTS post_category (
 
 CREATE TABLE IF NOT EXISTS comment (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES user(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
     post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     created DATETIME
     updated DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS like_dislike (
-    id INTEGER PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES user(id),
-    post_id INTEGER REFERENCES post(id) ON DELETE CASCADE,
-    islike INTEGER CHECK (islike IN (0, 1))
+CREATE TABLE IF NOT EXISTS post_rating (
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
+    islike INTEGER CHECK (islike IN (-1, 1)),
+    PRIMARY KEY (user_id, post_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS comment_rating (
+    comment_id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    islike INTEGER CHECK (islike IN (-1, 1))
 );

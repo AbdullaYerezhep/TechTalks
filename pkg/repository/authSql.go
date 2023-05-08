@@ -37,10 +37,10 @@ func (r *AuthSQL) GetUserByID(id int) (models.User, error) {
 }
 
 func (r *AuthSQL) GetUserByToken(token string) (models.User, error) {
-	var s models.Session
-	err := r.db.QueryRow("SELECT id, user_id, token, expiration_date FROM session WHERE token = ?", token).Scan(&s.ID, &s.UserId, &s.Token, &s.Expiration_date)
+	var user_id int
+	err := r.db.QueryRow("SELECT user_id FROM session WHERE token = ?", token).Scan(&user_id)
 	if err != nil {
 		return models.User{}, err
 	}
-	return r.GetUserByID(s.UserId)
+	return r.GetUserByID(user_id)
 }

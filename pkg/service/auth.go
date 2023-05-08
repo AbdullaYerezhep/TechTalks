@@ -33,10 +33,6 @@ func (s *AuthService) GetUser(name, password string) (models.User, error) {
 	return user, nil
 }
 
-func (s *AuthService) GetUserByToken(token string) (models.User, error) {
-	return s.repo.GetUserByToken(token)
-}
-
 func getHash(pass string) string {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(pass), 0)
 	return string(hash)

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="post">
+        <div class="post-categories">
+            {{range .Category}}
+            <div class="post-category">{{.}}</div>
+            {{end}}
+        </div>
+        <div class="post-title">{{ .Title }}</div>
+        <div class="post-content">{{.Content}}</div>
+        <div class="post-author">{{.Author}}</div>
+        <div class="post-date">Created at: {{.CreatedStr}}</div>
+        <div class="post-update">Last update: {{.UpdatedStr}}</div>
+        <div class="post-rating">
+            <div class="post-comments">{{.Comments}}
+                {{range .Comments}}
+                {{.User_ID}} says: <br>
+                {{.Content}}
+                {{end}}
+            </div>
+            <div class="post-likes">{{.Likes}}
+                <form action="/post/rate" method="POST">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <input type="hidden" name="action" value="like">
+                    <button type="submit"><img class="rate_button" src="/static/images/like.svg" alt="Like"></button>
+                </form>
+            </div>
+            <div class="post-dislikes">{{.Dislikes}}
+                <form action="/post/rate" method="POST">
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <input type="hidden" name="action" value="dislike">
+                    <button type="submit"><img class="rate_button" src="/static/images/!like_2.svg" alt="Dislike"></button>
+                </form>
+            </div>
+            
+        </div>
+        {{if eq $.User.ID .User_ID}}
+        <a href="/post/update/?id={{.ID}}"><img class="rate_button" src="/static/images/edit.svg" alt="Edit"></a>
+        <a href="/post/delete/?id={{.ID}}"><img class="rate_button" src="/static/images/trash.svg" alt="Delete"></a>
+        {{end}}
+    </div>
+</body>
+</html>

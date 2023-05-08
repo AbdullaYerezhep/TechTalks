@@ -45,13 +45,13 @@ func isValidEmail(email string) bool {
 
 func isValidPassword(password, confirmPass string) error {
 	var err error
-	match1, _ := regexp.MatchString("[A-Z]", password)
-	match2, _ := regexp.MatchString("[a-z]", password)
-	match3, _ := regexp.MatchString("[~!@#$%^&*_()-+={[}]|\\:;\"'<,>.?/]", password)
+	// match1, _ := regexp.MatchString("[A-Z]", password)
+	// match2, _ := regexp.MatchString("[a-z]", password)
+	// match3, _ := regexp.MatchString("[~!@#$%^&*_()-+={[}]|\\:;\"'<,>.?/]", password)
 
-	if !match1 || !match2 || !match3 {
-		return errors.New("invalid password")
-	}
+	// if !match1 || !match2 || !match3 {
+	// 	return errors.New("invalid password")
+	// }
 
 	if confirmPass != password {
 		err = errors.New("confirmation failed")

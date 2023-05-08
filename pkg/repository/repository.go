@@ -9,13 +9,11 @@ type Authorization interface {
 	CreateUser(user models.User) error
 	GetUser(name string) (models.User, error)
 	GetUserByID(id int) (models.User, error)
-	GetUserByToken(token string) (models.User, error)
 }
 
 type Session interface {
 	CreateSession(models.Session) error
 	GetSession(token string) (models.Session, error)
-	// UpdateSession(models.Session) error
 	DeleteSession(user_id int) error
 }
 
@@ -24,8 +22,8 @@ type Post interface {
 	GetPost(id int) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
 	UpdatePost(p models.Post) error
-	DeletePost(id int) error
-	LikeDis(user_id, post_id, isLike int) error
+	DeletePost(user_id, post_id int) error
+	LikeDis(models.RatePost) error
 }
 
 type Category interface {
@@ -34,7 +32,9 @@ type Category interface {
 
 type Comment interface {
 	AddComment(models.Comment) error
-	UpdateComment(id int) error
+	GetComment(id int) (models.Comment, error)
+	GetPostComments(id int) ([]models.Comment, error)
+	UpdateComment(models.Comment) error
 	DeleteComment(id int) error
 }
 
@@ -43,6 +43,7 @@ type Repository struct {
 	Session
 	Post
 	Category
+	Comment
 }
 
 func New(db *sql.DB) *Repository {
@@ -51,5 +52,6 @@ func New(db *sql.DB) *Repository {
 		Session:       NewSessionSQL(db),
 		Post:          NewPostSQL(db),
 		Category:      NewCategorySQL(db),
+		Comment:       NewCommentSQL(db),
 	}
 }

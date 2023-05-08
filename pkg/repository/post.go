@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"forum/models"
 )
 
@@ -55,9 +56,25 @@ func (r *PostSQL) GetPost(id int) (models.Post, error) {
 	return p, err
 }
 
-// Get post with it's categories, likes, dislikes and comments.
+// Get all posts with their categories and number of likes, dislikes and comments.
 func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
-	rows, err := r.db.Query("SELECT * FROM post ORDER BY created DESC")
+	query := `SELECT
+	    post.id,
+	    post.user_id,
+	    post.author,
+	    post.title,
+	    post.content,
+	    post.created,
+	    post.updated,
+	    COUNT(DISTINCT comment.id) AS comment_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = 0 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count
+	FROM post
+	LEFT JOIN comment ON post.id = comment.post_id
+	LEFT JOIN post_rating as pr ON post.id = pr.post_id
+	GROUP BY post.id;`
+
+	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -65,25 +82,22 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 	posts := []models.Post{}
 	for rows.Next() {
 		var post models.Post
-		err = rows.Scan(&post.ID, &post.User_ID, &post.Author, &post.Title, &post.Content, &post.Created, &post.Updated)
+		err = rows.Scan(
+			&post.ID,
+			&post.User_ID,
+			&post.Author,
+			&post.Title,
+			&post.Content,
+			&post.Created,
+			&post.Updated,
+			&post.Comments,
+			&post.Likes,
+			&post.Dislikes,
+		)
 		if err != nil {
 			return nil, err
 		}
 		post.TimeToStr()
-
-		catrow, err := r.db.Query("SELECT category_name FROM post p JOIN post_category pc ON p.id = pc.post_id WHERE p.id = ?", post.ID)
-		if err != nil {
-			return nil, err
-		}
-		defer catrow.Close()
-		for catrow.Next() {
-			var category string
-			err = catrow.Scan(&category)
-			if err != nil {
-				return nil, err
-			}
-			post.Category = append(post.Category, category)
-		}
 		posts = append(posts, post)
 	}
 	if err = rows.Err(); err != nil {
@@ -102,32 +116,40 @@ func (r *PostSQL) UpdatePost(p models.Post) error {
 	return err
 }
 
-func (r *PostSQL) DeletePost(id int) error {
-	tx, err := r.db.Begin()
-	if err != nil {
-		return err
-	}
-	stmt, err := tx.Prepare("DELETE FROM post WHERE id = ?")
+func (r *PostSQL) DeletePost(user_id, post_id int) error {
+	stmt, err := r.db.Prepare("DELETE FROM post WHERE user_id = ? AND id = ?")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-
-	_, err = stmt.Exec()
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	_, err = stmt.Exec(id)
+	_, err = stmt.Exec(user_id, post_id)
 	return err
 }
 
-func (r *PostSQL) LikeDis(user_id, post_id, isLike int) error {
-	stmt, err := r.db.Prepare("INSERT INTO like_dislike (user_id, post_id, islike) VALUES (?, ?, ?)")
+func (r *PostSQL) LikeDis(rate models.RatePost) error {
+	var oldIslike int8
+	err := r.db.QueryRow("SELECT islike FROM post_rating WHERE user_id = ? AND post_id = ?", rate.User_ID, rate.Post_ID).Scan(&oldIslike)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+	}
+	if oldIslike == rate.IsLike {
+		stmt, err := r.db.Prepare("DELETE FROM post_rating WHERE user_id = ? AND post_id = ?")
+		if err != nil {
+			return err
+		}
+		_, err = stmt.Exec(rate.User_ID, rate.Post_ID)
+		return err
+	}
+	stmt, err := r.db.Prepare(`INSERT INTO post_rating (user_id, post_id, islike) 
+	VALUES (?, ?, ?) 
+	ON CONFLICT(user_id, post_id) DO UPDATE 
+	SET islike = excluded.islike`)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(user_id, post_id, isLike)
+	_, err = stmt.Exec(rate.User_ID, rate.Post_ID, rate.IsLike)
 	return err
 }
 

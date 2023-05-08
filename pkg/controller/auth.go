@@ -72,6 +72,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 
 		s := newSession(user.ID)
 		err = h.srv.CreateSession(s)
+
 		if err != nil {
 			h.errLog.Println(err.Error())
 			h.errorMsg(w, http.StatusInternalServerError, "error", "")
@@ -83,6 +84,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 			Name:  "token",
 			Value: s.Token,
 		}
+
 		http.SetCookie(w, c)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -94,7 +96,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
-	user_id := r.Context().Value(ctxKey("user_id"))
+	user_id := r.Context().Value(keyUser)
 	err := h.srv.DeleteSession(user_id.(int))
 	if err != nil {
 		h.errLog.Println(err.Error())

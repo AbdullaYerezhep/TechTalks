@@ -9,7 +9,6 @@ type Authorization interface {
 	CreateUser(user models.User) error
 	GetUser(name, password string) (models.User, error)
 	GetUserByID(id int) (models.User, error)
-	GetUserByToken(token string) (models.User, error)
 }
 
 type Session interface {
@@ -23,15 +22,24 @@ type Post interface {
 	GetPost(id int) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
 	UpdatePost(p models.Post) error
-	DeletePost(id int) error
+	DeletePost(user_id, post_id int) error
 	GetCategories() ([]string, error)
-	LikeDis(user_id, post_id, islike int) error
+	RatePost(models.RatePost) error
+}
+
+type Comment interface {
+	AddComment(models.Comment) error
+	GetComment(id int) (models.Comment, error)
+	GetPostComments(id int) ([]models.Comment, error)
+	UpdateComment(models.Comment) error
+	DeleteComment(id int) error
 }
 
 type Service struct {
 	Authorization
 	Session
 	Post
+	Comment
 }
 
 func New(repo *repository.Repository) *Service {
@@ -39,5 +47,6 @@ func New(repo *repository.Repository) *Service {
 		Authorization: NewAuth(repo.Authorization),
 		Session:       NewSession(repo.Session),
 		Post:          NewPost(repo.Post, repo.Category),
+		Comment:       NewComment(repo.Comment),
 	}
 }

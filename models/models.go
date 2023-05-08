@@ -12,7 +12,6 @@ type User struct {
 }
 
 type Session struct {
-	ID              int
 	UserId          int
 	Token           string
 	Expiration_date time.Time
@@ -49,11 +48,19 @@ type Comment struct {
 	User_ID  int
 	Post_ID  int
 	Content  string
+	Created  string
+	Updated  *string
 	Likes    int
 	Dislikes int
 }
 
-type LikeDis struct {
+type RatePost struct {
+	User_ID int
+	Post_ID int
+	IsLike  int8
+}
+
+type RateComment struct {
 	ID         int
 	User_ID    int
 	Post_ID    int

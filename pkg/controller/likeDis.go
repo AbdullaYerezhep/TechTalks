@@ -1,18 +1,30 @@
 package controller
 
 import (
+	"forum/models"
 	"net/http"
-	"strconv"
 )
 
-func (h *Handler) likePost(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxKey("user_id"))
-	post_id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
-		return
+func (h *Handler) ratePost(w http.ResponseWriter, r *http.Request) {
+	var islike int8
+	switch r.URL.Path {
+	case "/post/rate/wow":
+		islike = 1
+	case "/post/rate/boo":
+		islike = -1
+	default:
+		h.errorMsg(w, http.StatusNotFound, "error", "")
 	}
-	if err = h.srv.Post.LikeDis(id.(int), post_id, 1); err != nil {
+
+	user_id := r.Context().Value(keyUser)
+	post_id := r.Context().Value(keyPost)
+	rate := models.RatePost{
+		User_ID: user_id.(int),
+		Post_ID: post_id.(int),
+		IsLike:  islike,
+	}
+
+	if err := h.srv.Post.RatePost(rate); err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
 		return
@@ -20,17 +32,5 @@ func (h *Handler) likePost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (h *Handler) dislikePost(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxKey("user_id"))
-	post_id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
-		return
-	}
-	if err = h.srv.Post.LikeDis(id.(int), post_id, 0); err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
-		return
-	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {
 }

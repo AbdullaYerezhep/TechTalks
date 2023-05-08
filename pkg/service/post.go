@@ -45,12 +45,12 @@ func (s *PostService) UpdatePost(p models.Post) error {
 	return s.repo.UpdatePost(p)
 }
 
-func (s *PostService) DeletePost(id int) error {
-	return s.repo.DeletePost(id)
+func (s *PostService) DeletePost(user_id, post_id int) error {
+	return s.repo.DeletePost(user_id, post_id)
 }
 
-func (s *PostService) LikeDis(user_id, post_id, isLike int) error {
-	return s.repo.LikeDis(user_id, post_id, isLike)
+func (s *PostService) RatePost(rate models.RatePost) error {
+	return s.repo.LikeDis(rate)
 }
 
 func containsAll(list, target []string) bool {

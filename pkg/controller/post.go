@@ -3,7 +3,6 @@ package controller
 import (
 	"forum/models"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -15,7 +14,7 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 		templates["addpost"].Execute(w, categories)
 
 	case http.MethodPost:
-		id := r.Context().Value(ctxKey("user_id"))
+		id := r.Context().Value(keyUser)
 		user, err := h.srv.GetUserByID(id.(int))
 		if err != nil {
 			h.errLog.Println(err.Error())
@@ -60,16 +59,12 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
-	post_id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		h.errorMsg(w, http.StatusBadRequest, "error", "")
-		return
-	}
+	post_id := r.Context().Value(keyPost)
 
 	switch r.Method {
 
 	case http.MethodGet:
-		post, err := h.srv.GetPost(post_id)
+		post, err := h.srv.GetPost(post_id.(int))
 		if err != nil {
 			h.errorMsg(w, http.StatusNotFound, "error", "")
 			return
@@ -84,13 +79,13 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 			h.errorMsg(w, http.StatusBadRequest, "error", "")
 			return
 		}
-		id := r.Context().Value(ctxKey("user_id"))
-		post, err := h.srv.GetPost(post_id)
+		user_id := r.Context().Value(keyUser)
+		post, err := h.srv.GetPost(post_id.(int))
 		if err != nil {
 			h.errorMsg(w, http.StatusNotFound, "error", "")
 			return
 		}
-		if post.User_ID != id.(int) {
+		if post.User_ID != user_id.(int) {
 			h.errorMsg(w, http.StatusBadRequest, "error", "")
 			return
 		}
@@ -110,28 +105,10 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxKey("user_id"))
-	post_id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, "error", "")
-		return
-	}
+	user_id := r.Context().Value(keyUser)
+	post_id := r.Context().Value(keyPost)
 
-	post, err := h.srv.GetPost(post_id)
-	if err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusNotFound, "error", "")
-		return
-	}
-
-	if id.(int) != post.User_ID {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, "error", "")
-		return
-	}
-
-	if err = h.srv.DeletePost(post.ID); err != nil {
+	if err := h.srv.DeletePost(user_id.(int), post_id.(int)); err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusNotFound, "error", "")
 		return
