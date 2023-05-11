@@ -1,6 +1,9 @@
 package controller
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 type CustomError struct {
 	Status     int
@@ -9,11 +12,15 @@ type CustomError struct {
 }
 
 func (h *Handler) errorMsg(w http.ResponseWriter, status int, tmpl, msg string) {
-	w.WriteHeader(status)
+	h.errLog.Println(msg)
 	e := CustomError{
 		Status:     status,
 		StatusText: http.StatusText(status),
 		CustomText: msg,
 	}
-	templates[tmpl].Execute(w, e)
+	w.WriteHeader(status)
+	if err := templates[tmpl].Execute(w, e); err != nil {
+		fmt.Fprint(w, http.StatusInternalServerError)
+		return
+	}
 }

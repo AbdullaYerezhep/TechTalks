@@ -46,6 +46,7 @@ type PostCategory struct {
 type Comment struct {
 	ID       int
 	User_ID  int
+	Author   string
 	Post_ID  int
 	Content  string
 	Created  string
@@ -70,7 +71,14 @@ type RateComment struct {
 
 type HomePage struct {
 	User
-	Posts []Post
+	Posts      []Post
+	Categories []string
+}
+
+type PostPageData struct {
+	User
+	Post
+	Comments []Comment
 }
 
 func (p *Post) TimeToStr() {

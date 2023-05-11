@@ -53,8 +53,8 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 		if session.Expiration_date.Before(time.Now()) {
 			err = h.srv.Session.DeleteSession(session.UserId)
 			if err != nil {
-				h.errLog.Println(err.Error())
-				h.errorMsg(w, http.StatusInternalServerError, "error", "")
+
+				h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 				return
 			}
 			if mode == defaultMode {
@@ -75,8 +75,7 @@ func (h *Handler) getPostID(next http.HandlerFunc) http.HandlerFunc {
 		post_id_str := r.URL.Query().Get("id")
 		postID, err := strconv.Atoi(post_id_str)
 		if err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusBadRequest, "error", "")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 
@@ -91,8 +90,7 @@ func (h *Handler) getCommentID(next http.HandlerFunc) http.HandlerFunc {
 		comment_id_any := r.URL.Query().Get("id")
 		comment_id, err := strconv.Atoi(comment_id_any)
 		if err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusBadRequest, "error", "")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 

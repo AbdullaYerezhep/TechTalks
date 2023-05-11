@@ -3,29 +3,35 @@ package controller
 import (
 	"forum/models"
 	"net/http"
+	"time"
 )
 
 func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, "error", "")
+		h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 		return
 	}
 
 	user_id := r.Context().Value(keyUser)
 	post_id := r.Context().Value(keyPost)
-
+	current_time := time.Now().Format("02-01-2006 15:04")
 	comment := models.Comment{
 		User_ID: user_id.(int),
 		Post_ID: post_id.(int),
 		Content: r.FormValue("comment-content"),
+		Created: current_time,
 	}
 
 	if err := h.srv.AddComment(comment); err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 		return
 	}
+
+	referer := r.Header.Get("Referer")
+	http.Redirect(w, r, referer, http.StatusSeeOther)
+}
+
+func PostComments(w http.ResponseWriter, r *http.Request) {
 }
 
 // func (h *Handler) updateComment(w http.ResponseWriter, r *http.Request) {

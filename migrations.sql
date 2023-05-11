@@ -9,9 +9,9 @@ PRAGMA foreign_keys = ON;
 
 -- DROP TABLE IF EXISTS `post_category`;
 
-DROP TABLE IF EXISTS `comment`;
+-- DROP TABLE IF EXISTS `comment`;
 
-DROP TABLE IF EXISTS `post_rating`;
+-- DROP TABLE IF EXISTS `post_rating`;
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
@@ -58,10 +58,11 @@ CREATE TABLE IF NOT EXISTS post_category (
 CREATE TABLE IF NOT EXISTS comment (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
+    username TEXT,
     post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
-    created DATETIME
-    updated DATETIME
+    created TEXT,
+    updated TEXT
 );
 
 CREATE TABLE IF NOT EXISTS post_rating (

@@ -11,27 +11,28 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		var categories []string
 		categories, _ = h.srv.Post.GetCategories()
-		templates["addpost"].Execute(w, categories)
+		if err := templates["addpost"].Execute(w, categories); err != nil {
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+			return
+		}
 
 	case http.MethodPost:
 		id := r.Context().Value(keyUser)
 		user, err := h.srv.GetUserByID(id.(int))
 		if err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
 
 		if err := r.ParseForm(); err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusBadRequest, "error", "Form modified")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 
 		currentTime := time.Now()
 		categories := r.Form["category[]"]
 		if len(categories) == 0 {
-			h.errorMsg(w, http.StatusBadRequest, "error", "")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 
@@ -46,10 +47,10 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err = h.srv.CreatePost(post); err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
+
 		http.Redirect(w, r, "/", http.StatusFound)
 
 	default:
@@ -66,27 +67,27 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		post, err := h.srv.GetPost(post_id.(int))
 		if err != nil {
-			h.errorMsg(w, http.StatusNotFound, "error", "")
+			h.errorMsg(w, http.StatusNotFound, "error", err.Error())
 			return
 		}
-		if err = templates["post"].Execute(w, post); err != nil {
-			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		if err = templates["update-post"].Execute(w, post); err != nil {
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
 
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
-			h.errorMsg(w, http.StatusBadRequest, "error", "")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 		user_id := r.Context().Value(keyUser)
 		post, err := h.srv.GetPost(post_id.(int))
 		if err != nil {
-			h.errorMsg(w, http.StatusNotFound, "error", "")
+			h.errorMsg(w, http.StatusNotFound, "error", err.Error())
 			return
 		}
 		if post.User_ID != user_id.(int) {
-			h.errorMsg(w, http.StatusBadRequest, "error", "")
+			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
 		}
 		post.Title = r.FormValue("title")
@@ -109,8 +110,7 @@ func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 	post_id := r.Context().Value(keyPost)
 
 	if err := h.srv.DeletePost(user_id.(int), post_id.(int)); err != nil {
-		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusNotFound, "error", "")
+		h.errorMsg(w, http.StatusNotFound, "error", err.Error())
 		return
 	}
 

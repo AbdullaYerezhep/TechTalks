@@ -14,12 +14,16 @@ func NewCommentSQL(db *sql.DB) *CommentSQL {
 }
 
 func (r *CommentSQL) AddComment(com models.Comment) error {
-	stmt, err := r.db.Prepare("INSERT INTO comment (user_id, post_id, content) VALUES (?, ?, ?)")
+	err := r.db.QueryRow("SELECT username FROM users WHERE id = ?", com.User_ID).Scan(&com.Author)
+	if err != nil {
+		return err
+	}
+	stmt, err := r.db.Prepare("INSERT INTO comment (user_id, username, post_id, content, created) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(com.User_ID, com.Post_ID, com.Content)
+	_, err = stmt.Exec(com.User_ID, com.Author, com.Post_ID, com.Content, com.Created)
 	return err
 }
 
@@ -32,13 +36,13 @@ func (r *CommentSQL) GetComment(id int) (models.Comment, error) {
 
 func (r *CommentSQL) GetPostComments(post_id int) ([]models.Comment, error) {
 	var comments []models.Comment
-	row, err := r.db.Query("SELECT id, user_id, post_id, content FROM comment WHERE post_id = ?", post_id)
+	row, err := r.db.Query("SELECT id, user_id, username, post_id, content, created, updated FROM comment WHERE post_id = ?", post_id)
 	if err != nil {
 		return nil, err
 	}
 	for row.Next() {
 		var com models.Comment
-		err := row.Scan(&com.ID, &com.User_ID, &com.Post_ID, &com.Content)
+		err := row.Scan(&com.ID, &com.User_ID, &com.Author, &com.Post_ID, &com.Content, &com.Created, &com.Updated)
 		if err != nil {
 			return nil, err
 		}

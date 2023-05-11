@@ -51,8 +51,20 @@ func (r *PostSQL) CreatePost(p models.Post) error {
 
 func (r *PostSQL) GetPost(id int) (models.Post, error) {
 	var p models.Post
-	row := r.db.QueryRow("SELECT id, user_id, author, title, content, created, updated FROM post WHERE id = ?", id)
-	err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.Created, &p.Updated)
+	query := `
+	SELECT post.id, post.user_id, post.author, post.title, post.content, post.created, post.updated,
+		COUNT(CASE WHEN post_rating.islike = 1 THEN 1 END) AS likes, 
+		COUNT(CASE WHEN post_rating.islike = -1 THEN 1 END) AS dislikes
+	FROM 
+		post 
+	LEFT JOIN 
+		post_rating ON post.id = post_rating.post_id 
+	WHERE
+		post.id = ?
+	GROUP BY post.id;
+	`
+	row := r.db.QueryRow(query, id)
+	err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.Created, &p.Updated, &p.Likes, &p.Dislikes)
 	return p, err
 }
 
@@ -68,7 +80,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 	    post.updated,
 	    COUNT(DISTINCT comment.id) AS comment_count,
 	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
-	    COUNT(DISTINCT CASE WHEN pr.islike = 0 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count
+	    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count
 	FROM post
 	LEFT JOIN comment ON post.id = comment.post_id
 	LEFT JOIN post_rating as pr ON post.id = pr.post_id
@@ -128,6 +140,7 @@ func (r *PostSQL) DeletePost(user_id, post_id int) error {
 
 func (r *PostSQL) LikeDis(rate models.RatePost) error {
 	var oldIslike int8
+
 	err := r.db.QueryRow("SELECT islike FROM post_rating WHERE user_id = ? AND post_id = ?", rate.User_ID, rate.Post_ID).Scan(&oldIslike)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {

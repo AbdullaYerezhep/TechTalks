@@ -38,26 +38,26 @@
                 <div class="post-update">Last update: {{.UpdatedStr}}</div>
                 <div class="post-rating">
                     <div class="post-comments">{{.Comments}}
-                        <a href="/post/comments/?id={{.ID}}"><img class="rate_button" src="/static/images/comments.svg" alt="Comments"></a>
+                        <a href="/post/?id={{.ID}}"><img class="rate_button" src="/static/images/comments.svg" alt="Comments"></a>
                     </div>
                     <div class="post-likes">{{.Likes}}
-                        <form action="/post/rate" method="POST">
-                            <input type="hidden" name="id" value="{{.ID}}">
-                            <input type="hidden" name="action" value="like">
+                        <form action="/post/rate/" method="POST">
+                            <input type="hidden" name="post_id" value="{{.ID}}">
+                            <input type="hidden" name="action" value="wow">
                             <button type="submit"><img class="rate_button" src="/static/images/like.svg" alt="Like"></button>
                         </form>
                     </div>
                     <div class="post-dislikes">{{.Dislikes}}
-                        <form action="/post/rate" method="POST">
-                            <input type="hidden" name="id" value="{{.ID}}">
-                            <input type="hidden" name="action" value="dislike">
+                        <form action="/post/rate/" method="POST">
+                            <input type="hidden" name="post_id" value="{{.ID}}">
+                            <input type="hidden" name="action" value="boo">
                             <button type="submit"><img class="rate_button" src="/static/images/!like_2.svg" alt="Dislike"></button>
                         </form>
                     </div>
                     
                 </div>
                 {{if eq $.User.ID .User_ID}}
-                <button onclick="myFunction()"><img class="rate_button" src="/static/images/edit.svg" alt="Edit"></button>
+                <a href="/post/edit/?id={{.ID}}"><img class="rate_button" src="/static/images/edit.svg" alt="Edit"></a>
                 <a href="/post/delete/?id={{.ID}}"><img class="rate_button" src="/static/images/trash.svg" alt="Delete"></a>
                 {{end}}
             </div>
@@ -67,11 +67,5 @@
             
         </div>
     </section>
-    <script>
-        function myFunction() {
-            document.getElementById("form").style.visibility = "visible";
-        } 
-
-    </script>
 </body>
 </html>
