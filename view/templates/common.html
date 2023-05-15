@@ -1,0 +1,92 @@
+{{define "header"}}
+    <header class="header">
+        <a class="logo" href="/">
+            <img class="logo-img" src="/static/images/logo.jpeg" alt="logo">
+            <p class="logo-text">TECH talks</p> 
+        </a>
+        {{if .User}}
+            {{if .User.Name}}
+                <div class="user">
+                    <a href="/post/add" class="new-post">+</a>
+                    <button id="button" class="profile">{{.User.Name}} </button>
+                </div>
+            {{else}}
+                    <button  class="signInButton headerSignUpBtn">Sign in</a>
+            {{end}}
+        {{end}}
+   </header>
+{{end}}
+
+
+{{define "footer"}}
+<footer>
+    <p>Created by <a href="https://01.alem.school/git/Freer/forum"> MAA (Meirbek && Adai && Abdulla) &copy;</a> in 2023</p>
+</footer>
+{{end}}
+
+{{define "menu"}}
+<div class="menu">
+    <div class="navigation">
+        <h3>FEEDS</h3>
+        <a id="focus-Popular" role="menuitem" class="menuitem home" aria-label="/home" href="/home"><img class="icon" src="/static/images/home.svg"><span class="">Home</span></a>
+        <a id="focus-Popular" role="menuitem" class="menuitem popular" aria-label="/popular" href="/popular"><img class="icon" src="/static/images/popular.svg"><span class="">Popular</span></a>
+        <h3>TOPICS</h3>
+        {{range .Categories}}
+            <a id="focus-{{.}}" role="menuitem" class="menuitem {{.}}" aria-label="/{{.}}" href="/{{.}}"><i class="icon icon-{{.}}"></i><span class="{{.}}">{{.}}</span></a>
+        {{end}}
+    </div>
+
+    <div class="menuAuth">
+        {{if .User}}
+        {{if .User.Name}}
+            <a href="/logout" class="menuSignOut">Sign Out</a>
+        {{else}}
+            <p>Create an account to follow<br> your favorite communities<br> and start taking part in<br> conversations.</p>
+            <a class="signUpButton menuSignUp">Sign Up</a>
+        {{end}}
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+
+{{define "sign-up"}}
+<div id="signUpContainer" class="hidden">
+    <div class="signUpContent">
+        <div class="fa-x signUpContainer">x</div>
+        <h2>Sign Up</h2>
+        <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
+        <form action="/sign-up" class="signUpForm" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" required>
+            <label for="email">Email</label>
+            <input type="text" name="email" required>
+            <label for="pasword">Pasword</label>
+            <input type="password" name="password">
+            <label for="confirmPass">Confirm password</label>
+            <input type="password" name="confirmPass" required>
+            <button class="signUpBtn" class="auth" type="submit" value="Register">Sign up</button>
+        </form>
+        <p>Already have an account? Try <button class="signInButton signInLink">Sign in</button></p>
+    </div>
+</div>
+{{end}}
+
+
+{{define "sign-in"}}
+<div id="signInContainer" class="hidden">
+    <div class="signInContent">
+        <div class="fa-x signInContainer">x</div>
+        <h2>Sign In</h2>
+        <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
+        <form action="/sign-in" class="signInForm" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" required>
+            <button class="signInBtn" type="submit" value="Login">Sign in</button>
+        </form>
+        <p>Don't have an account? Try<button class="signUpButton signUpLink">Sign up</button></p>
+    </div>
+</div>
+{{end}}
