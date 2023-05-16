@@ -17,9 +17,8 @@ const (
 type ctxKey string
 
 const (
-	keyUser    = ctxKey("user_id")
-	keyPost    = ctxKey("post_id")
-	keyComment = ctxKey("comment_id")
+	keyUser = ctxKey("user_id")
+	keyPost = ctxKey("post_id")
 )
 
 // Middleware "checkAccess" works on two modes. If it doesn't validate the token.
@@ -80,21 +79,6 @@ func (h *Handler) getPostID(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		ctx := context.WithValue(r.Context(), keyPost, postID)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
-
-// getPostId - sends comment_id in context.
-func (h *Handler) getCommentID(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		comment_id_any := r.URL.Query().Get("id")
-		comment_id, err := strconv.Atoi(comment_id_any)
-		if err != nil {
-			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
-			return
-		}
-
-		ctx := context.WithValue(r.Context(), keyComment, comment_id)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

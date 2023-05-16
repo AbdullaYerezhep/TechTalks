@@ -52,10 +52,38 @@
             </form>
             {{range .Comments}}
             <hr>
-            {{.Author}} says: <br>
-            {{.Content}}
-            <hr>
+            <div id="comment-{{.ID}}">
+                <p>{{.Author}} says:</p>
+                <p id="comment-content-{{.ID}}">{{.Content}}</p>
+                <p>{{.Created}}</p>
+                {{if .Updated}}
+                <p>{{.Updated}}</p>
+                {{end}}
+                {{if eq $.User.ID .User_ID}}
+                <button onclick="editComment({{.ID}})">Update</button>
+                <button onclick="deleteComment({{.ID}})">Delete</button>
+                {{end}}
+                <div class="comment-likes">{{.Likes}}
+                    <form action="/comment/rate/" method="POST">
+                        <input type="hidden" name="comment_id" value="{{.ID}}">
+                        <input type="hidden" name="action" value="wow">
+                        <button type="submit"><img class="rate_button" src="/static/images/like.svg" alt="Like"></button>
+                    </form>
+                </div>
+                <div class="comment-dislikes">{{.Dislikes}}
+                    <form action="/comment/rate/" method="POST">
+                        <input type="hidden" name="comment_id" value="{{.ID}}">
+                        <input type="hidden" name="action" value="boo">
+                        <button type="submit"><img class="rate_button" src="/static/images/!like_2.svg" alt="Dislike"></button>
+                    </form>
+                </div>
+            </div>
+            <div id="edit-comment-{{.ID}}" style="display:none">
+                <textarea name="content" id="edit-comment-content-{{.ID}}">{{.Content}}</textarea>
+                <button onclick="submitComment({{.ID}})">Confirm</button>            
+            </div>
             {{end}}
+          
         </div>
     </div>
 </body>

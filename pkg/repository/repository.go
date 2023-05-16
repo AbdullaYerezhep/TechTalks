@@ -36,6 +36,7 @@ type Comment interface {
 	GetPostComments(id int) ([]models.Comment, error)
 	UpdateComment(models.Comment) error
 	DeleteComment(id int) error
+	RateComment(models.RateComment) error
 }
 
 type Repository struct {
