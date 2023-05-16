@@ -23,12 +23,12 @@ type Category struct {
 }
 
 type Post struct {
-	ID         int
-	User_ID    int
-	Author     string
-	Category   []string
-	Title      string
-	Content    string
+	ID         int      `json:"id"`
+	User_ID    int      `json:"user_id"`
+	Author     string   `json:"author"`
+	Category   []string `json:"categoires"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
 	Created    time.Time
 	Updated    time.Time
 	Comments   int
@@ -44,11 +44,11 @@ type PostCategory struct {
 }
 
 type Comment struct {
-	ID       int
-	User_ID  int
-	Author   string
-	Post_ID  int
-	Content  string
+	ID       int    `json:"id"`
+	User_ID  int    `json:"user_id"`
+	Author   string `json:"username"`
+	Post_ID  int    `json:"post_id"`
+	Content  string `json:"content"`
 	Created  string
 	Updated  *string
 	Likes    int
@@ -56,17 +56,17 @@ type Comment struct {
 }
 
 type RatePost struct {
-	User_ID int
-	Post_ID int
-	IsLike  int8
+	User_ID int  `json:"user_id"`
+	Post_ID int  `json:"post_id"`
+	IsLike  int8 `json:"islike"`
 }
 
 type RateComment struct {
 	ID         int
-	User_ID    int
-	Post_ID    int
-	Comment_ID int
-	IsLike     int8
+	User_ID    int  `json:"user_id"`
+	Post_ID    int  `json:"post_id"`
+	Comment_ID int  `json:"comment_id"`
+	IsLike     int8 `json:"islike"`
 }
 
 type HomePage struct {

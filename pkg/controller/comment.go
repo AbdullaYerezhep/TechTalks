@@ -7,42 +7,36 @@ import (
 	"time"
 )
 
-type CommentUpdateRequest struct {
-	ID      int    `json:"id"`
-	Content string `json:"content"`
-}
-
 func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
+	user_id := r.Context().Value(keyUser)
+	decoder := json.NewDecoder(r.Body)
+
+	var com models.Comment
+
+	if err := decoder.Decode(&com); err != nil {
+		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
 		return
 	}
 
-	user_id := r.Context().Value(keyUser)
 	post_id := r.Context().Value(keyPost)
 
 	current_time := time.Now().Format("02-01-2006 15:04")
-	comment := models.Comment{
-		User_ID: user_id.(int),
-		Post_ID: post_id.(int),
-		Content: r.FormValue("comment-content"),
-		Created: current_time,
-	}
+	com.Post_ID = post_id.(int)
+	com.User_ID = user_id.(int)
+	com.Created = current_time
 
-	if err := h.srv.AddComment(comment); err != nil {
-		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+	if err := h.srv.AddComment(com); err != nil {
+		h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 		return
 	}
-
-	referer := r.Header.Get("Referer")
-	http.Redirect(w, r, referer, http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) editComment(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	decoder := json.NewDecoder(r.Body)
 
-	var req CommentUpdateRequest
+	var req models.Comment
 
 	if err := decoder.Decode(&req); err != nil {
 		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
@@ -77,7 +71,7 @@ func (h *Handler) deleteComment(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	decoder := json.NewDecoder(r.Body)
 
-	var req CommentUpdateRequest
+	var req models.Comment
 
 	if err := decoder.Decode(&req); err != nil {
 		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
