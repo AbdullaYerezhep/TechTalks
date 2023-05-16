@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/single-post.css">
     <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
     <link rel="shortcut icon" href="/static/images/edit_ico.svg" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +15,13 @@
 {{end}}
 
 {{define "body"}}
+<div id="overlay"></div>
+<div id="id" hidden>{{.Post.ID}}</div>
+<div id="user_id" hidden>{{if .User}}{{.User.ID}}{{end}}</div>
 <div class="single-post-container">
-    <div id="id" hidden>{{.Post.ID}}</div>
+
+    {{template "sign-up" .}}
+    {{template "sign-in" .}}
     <div class="single-post">
         <div class="single-post-rating">
             <div class="single-post-likes">{{.Post.Likes}}
@@ -74,9 +80,10 @@
         </div>
     </div>
     <div class="add-comment">
-        <label class="add-comment-author" for="new-comment">Comment as {{.User.Name}}</label>
-        <input type="text" name="comment-content" class="add-comment-input" id="new-comment">
-        <button class="addCommentBtn" id="addCommentBtn" type="submit">Add</button>
+        {{if .User}}
+            <label class="add-comment-author" for="new-comment">Comment as {{.User.Name}}</label>
+        {{end}}
+        <button class="addCommentBtn" id="addCommentBtn" type="submit">Add</button>      
     </div>
     <div class="single-post-comments">
         {{if .User}}
@@ -128,6 +135,7 @@
 {{end}}
 {{define "scripts"}}
    <script src="/static/js/post.js"></script>
+   <script src="/static/js/global.js"></script>
 {{end}}
 
 
