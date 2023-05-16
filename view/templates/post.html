@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/script.js"></script>
+    <link rel="shortcut icon" href="/static/images/main_ico.svg" type="image/x-icon">
+    <title>Forum</title>
+    <title>{{.Post.Title}}</title>
+</head>
+<body>
+    <div class="post">
+        <div class="post-categories">
+            {{range .Post.Category}}
+            <div class="post-category">{{.}}</div>
+            {{end}}
+        </div>
+        <div class="post-title">{{ .Post.Title }}</div>
+        <div class="post-content">{{.Post.Content}}</div>
+        <div class="post-author">{{.Post.Author}}</div>
+        <div class="post-date">Created at: {{.Post.CreatedStr}}</div>
+        <div class="post-update">Last update: {{.Post.UpdatedStr}}</div>
+        <div class="post-rating">
+            <div class="post-likes">{{.Post.Likes}}
+                <form action="/post/rate/" method="POST">
+                    <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                    <input type="hidden" name="action" value="wow">
+                    <button type="submit"><img class="rate_button" src="/static/images/like.svg" alt="Like"></button>
+                </form>
+            </div>
+            <div class="post-dislikes">{{.Post.Dislikes}}
+                <form action="/post/rate/" method="POST">
+                    <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                    <input type="hidden" name="action" value="boo">
+                    <button type="submit"><img class="rate_button" src="/static/images/!like_2.svg" alt="Dislike"></button>
+                </form>
+            </div>
+        </div>
+        {{if eq $.User.ID .User_ID}}
+        <a href="/post/update/?id={{.Post.ID}}"><img class="rate_button" src="/static/images/edit.svg" alt="Edit"></a>
+        <a href="/post/delete/?id={{.Post.ID}}"><img class="rate_button" src="/static/images/trash.svg" alt="Delete"></a>
+        {{end}}
+        <div class="post-comments">
+            <form action="/post/comment">
+                <input type="hidden" name="id" value="{{.Post.ID}}">
+                <input type="hidden" name="action" value="new-comment">
+                <label for="new-comment">Write comment</label>
+                <input type="text" name="comment-content" id="new-comment">
+                <button type="submit">Add</button>
+            </form>
+            {{range .Comments}}
+            <hr>
+            {{.Author}} says: <br>
+            {{.Content}}
+            <hr>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>

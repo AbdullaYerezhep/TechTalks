@@ -26,7 +26,6 @@ func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 		return
 	}
-
 }
 
 func PostComments(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +82,6 @@ func (h *Handler) deleteComment(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusNotFound, "error", "")
 		return
 	}
-
 
 	// Redirect the user to the previous URL
 }

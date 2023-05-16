@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="/static/images/new_post.svg" type="image/x-icon">
+    <title>New post</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="post-title">Title:</label>
+        <input type="text" id="post-title" name="title"><br>
+
+        <div class="category">    
+            {{range .}}
+            <input type="checkbox" id="category" name="category[]" value="{{.}}">
+            <label for="category">{{.}}</label>
+            {{end}}
+        </div>
+
+        <label for="post-content">Content:</label>
+        <textarea id="post-content" name="content"></textarea><br>
+        
+        <button type="submit">Submit</button>
+      </form>
+      
+</body>
+</html>

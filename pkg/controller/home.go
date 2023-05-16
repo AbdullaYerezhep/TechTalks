@@ -68,7 +68,6 @@ func (h *Handler) postDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Comments = comments
-
 	if err := templates["post"].Execute(w, data); err != nil {
 		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 		return
