@@ -14,7 +14,7 @@
 
 {{define "body"}}
 <div class="post-container">
-    <form class="post" method="POST">
+    <div class="post">
         <label for="post-title">Title:</label>
         <input type="text" id="post-title" name="title"><br>
         <label for="post-content">Content:</label>
@@ -27,8 +27,8 @@
                 </div>
             {{end}}
         </div>
-        <button id="addPostSubmit" type="submit">Submit</button>
-      </form>   
+        <button id="addPostSubmit">Submit</button>
+    </div>   
 </div>
 {{end}} 
 
