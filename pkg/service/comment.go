@@ -32,3 +32,7 @@ func (s *CommentService) UpdateComment(com models.Comment) error {
 func (s *CommentService) DeleteComment(id int) error {
 	return s.repo.DeleteComment(id)
 }
+
+func (s *CommentService) RateComment(rate models.RateComment) error {
+	return s.repo.RateComment(rate)
+}
