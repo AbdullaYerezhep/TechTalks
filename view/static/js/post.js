@@ -1,15 +1,85 @@
 // add comment under post
-let postID = document.getElementById("id").innerText
-let userID = document.getElementById("user_id").innerText
-console.log(postID, userID);
+let post_id = document.getElementById("post_id").innerText
+let user_id = document.getElementById("user_id").innerText
+console.log(post_id, user_id);
 let addCommentButton = document.getElementById("addCommentBtn")
-addCommentButton.addEventListener("click", ()=>{
-    if (userID.length == 0){
-        signInPrompt()
-    }else{
-        submitNewComment(postID)
-    }
+
+let addCommentSubmitButton = document.getElementById("addCommentSubmitBtn")
+let isAuthenticated = (user_id.length === 0)
+
+
+addCommentSubmitButton.addEventListener("click", () => {
+    let content = document.getElementById("new-comment").value
+    let body = {content: content, post_id: post_id}
+    let url = "/comment"
+    sendRequestPost(body, url)
 })
+
+addCommentButton.addEventListener("click", () => {
+    signInPrompt()
+})
+
+// updateComment.addEventListener("click", ()=>{
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+// deleteComment.addEventListener("click", ()=> {
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+// updatePost.addEventListener("click", ()=>{
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+// deletePost.addEventListener("click", ()=>{
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+// ratePost.addEventListener("click", ()=>{
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+// rateComment.addEventListener("click", ()=>{
+//     let body = {}
+//     let url = ""
+//     if (isAuthenticated){
+//         signInPrompt()
+//     }else{
+//         sendRequest()
+//     }
+// })
+
+
 
 function signInPrompt() {
     signInContainer.classList.remove("hidden");
@@ -17,11 +87,11 @@ function signInPrompt() {
 }
 
 
-function submitNewComment(p_id) {
+function sendRequestEdit(body, url) {
     let content = document.getElementById("new-comment").value;
-    fetch("/post/comment", {
-            method: "POST",
-            body: JSON.stringify({ post_id: p_id, content: content }),
+    fetch(url, {
+            method: method,
+            body: JSON.stringify(body),
             headers: {
             "Content-Type": "application/json"
         }
@@ -30,29 +100,47 @@ function submitNewComment(p_id) {
         if (response.ok) {
             location.reload()
         } else {
-            console.error("Failed to update comment");
+            console.error("Failed to add comment");
         }
     })
     .catch(error => {
         console.error(error);
     });
 }
-  
-function submitUpdatedComment(id) {
-    // let loc = location.href
-    var content = document.getElementById("edit-comment-content-" + id).value;
-    fetch("/post/comment/edit/", {
-        method: "POST",
-        body: JSON.stringify({ id: id, content: content }),
-        headers: {
-        "Content-Type": "application/json"
+
+function sendRequestDelete(body, url) {
+    fetch(url, {
+            method: "DELETE",
+            body: JSON.stringify(body),
+            headers: {
+            "Content-Type": "application/json"
         }
     })
     .then(response => {
         if (response.ok) {
-        location.reload()
+            location.reload()
         } else {
-        console.error("Failed to update comment");
+            console.error("Failed to add comment");
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
+
+function sendRequestPost(body, url) {
+    fetch(url, {
+            method: "DELETE",
+            body: JSON.stringify(body),
+            headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload()
+        } else {
+            console.error("Failed to add comment");
         }
     })
     .catch(error => {

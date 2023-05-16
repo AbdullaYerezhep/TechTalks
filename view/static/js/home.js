@@ -12,3 +12,6 @@ function openPost(post) {
     let id = post.querySelector(".id").textContent
     window.location.href = "/post/?id="+id
 }
+
+
+// rating logic
