@@ -18,7 +18,10 @@ func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	post_id := r.Context().Value(keyPost)
+
 	current_time := time.Now().Format("02-01-2006 15:04")
+	com.Post_ID = post_id.(int)
 	com.User_ID = user_id.(int)
 	com.Created = current_time
 

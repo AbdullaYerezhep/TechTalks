@@ -40,8 +40,7 @@ func (h *Handler) ratePost(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusBadRequest, errorTemp, err.Error())
 		return
 	}
-	referer := r.Header.Get("Referer")
-	http.Redirect(w, r, referer, http.StatusSeeOther)
+	
 }
 
 func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {

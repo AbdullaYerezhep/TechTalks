@@ -7,17 +7,22 @@ import (
 )
 
 func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(keyUser)
 	switch r.Method {
 	case http.MethodGet:
 		var categories []string
 		categories, _ = h.srv.Post.GetCategories()
-		if err := templates["addpost"].Execute(w, categories); err != nil {
+		user, _ := h.srv.GetUserByID(id.(int))
+		addPost := models.AddPostPage{
+			User: user,
+			Categories: categories,
+		}
+		if err := templates["addpost"].Execute(w, addPost); err != nil {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
 
 	case http.MethodPost:
-		id := r.Context().Value(keyUser)
 		user, err := h.srv.GetUserByID(id.(int))
 		if err != nil {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())

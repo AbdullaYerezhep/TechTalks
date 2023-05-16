@@ -46,11 +46,11 @@ func (h *Handler) postDetails(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	post_id_ctx := r.Context().Value(keyPost)
 	post_id := post_id_ctx.(int)
-
+	
 	if user_id != nil {
 		user, err := h.srv.GetUserByID(user_id.(int))
 		if err == nil {
-			data.User = user
+			data.User = &user
 		}
 	}
 
@@ -60,6 +60,7 @@ func (h *Handler) postDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Post = post
+	data.Categories, _ = h.srv.GetCategories()
 
 	comments, err := h.srv.GetPostComments(post_id)
 	if err != nil {

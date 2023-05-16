@@ -75,10 +75,16 @@ type HomePage struct {
 	Categories []string
 }
 
-type PostPageData struct {
+type AddPostPage struct {
 	User
+	Categories []string
+}
+
+type PostPageData struct {
+	*User
 	Post
 	Comments []Comment
+	Categories []string
 }
 
 func (p *Post) TimeToStr() {

@@ -1,0 +1,143 @@
+{{template "base" .}}
+{{define "styles"}}
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/single-post.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
+    <link rel="shortcut icon" href="/static/images/edit_ico.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,900;1,100;1,200&display=swap" rel="stylesheet">
+{{end}}
+
+{{define "title"}}
+    {{.Post.Title}}
+{{end}}
+
+{{define "body"}}
+<div id="overlay"></div>
+<div id="id" hidden>{{.Post.ID}}</div>
+<div id="user_id" hidden>{{if .User}}{{.User.ID}}{{end}}</div>
+<div class="single-post-container">
+
+    {{template "sign-up" .}}
+    {{template "sign-in" .}}
+    <div class="single-post">
+        <div class="single-post-rating">
+            <div class="single-post-likes">{{.Post.Likes}}
+                <form action="/post/rate/" method="POST">
+                    <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                    <input type="hidden" name="action" value="wow">
+                    <button class="likeBtn"  type="submit">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="1000" viewBox="0 0 1000 1000" xml:space="preserve">
+                        <rect x="0" y="0" width="100%" height="100%" fill="rgba(255,255,255,0)"/>
+                        <g transform="matrix(28.0825 0 0 28.0825 500.0005 500.0005)" id="922731">
+                        <g vector-effect="non-scaling-stroke">
+                        <g transform="matrix(1 0 0 1 -10 7)" id="Stock_cut">
+                        <rect class="pattern-rect" x="-3" y="-8" rx="0" ry="0" width="6" height="16"/>
+                        </g>
+                        <g transform="matrix(1 0 0 1 3 1)" id="Stock_cut">
+                        <path class="pattern-like" transform=" translate(-19, -17)" d="M 9 15 l 5 -5 l 2 -7 h 0 c 2.209 0 4 1.791 4 4 v 8 h 5 h 0 c 2.209 0 4 1.791 4 4 v 0 l -1.721 10.329 C 27.118 30.293 26.283 31 25.306 31 H 9 V 15 z" stroke-linecap="round"/>
+                        </g>
+                        </g>
+                        </g>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            <div class="single-post-dislikes">{{.Post.Dislikes}}
+                <form action="/post/rate/" method="POST">
+                    <input type="hidden" name="post_id" value="{{.Post.ID}}">
+                    <input type="hidden" name="action" value="boo">
+                    <button class="dislikeBtn" type="submit">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="1000" viewBox="0 0 1000 1000" xml:space="preserve">
+                        <rect x="0" y="0" width="100%" height="100%" fill="rgba(255,255,255,0)"/>
+                        <g transform="matrix(-28.0825 0 0 -28.0825 499.9995 499.9995)" id="922731">
+                        <g vector-effect="non-scaling-stroke">
+                        <g transform="matrix(1 0 0 1 -10 7)" id="Stock_cut">
+                        <rect class="pattern-rect"  x="-3" y="-8" rx="0" ry="0" width="6" height="16"/>
+                        </g>
+                        <g transform="matrix(1 0 0 1 3 1)" id="Stock_cut">
+                        <path class="pattern-dislike" transform=" translate(-19, -17)" d="M 9 15 l 5 -5 l 2 -7 h 0 c 2.209 0 4 1.791 4 4 v 8 h 5 h 0 c 2.209 0 4 1.791 4 4 v 0 l -1.721 10.329 C 27.118 30.293 26.283 31 25.306 31 H 9 V 15 z" stroke-linecap="round"/>
+                        </g>
+                        </g>
+                        </g>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="single-post-content">
+            <div class="single-post-categories">
+                {{range .Post.Category}}
+                <div class="single-post-category">{{.}}</div>
+                {{end}}
+            </div>
+            <div class="single-post-author"> Posted by: {{.Post.Author}} at {{.Post.CreatedStr}}</div>
+            <div class="single-post-title">{{.Post.Title }}</div>
+            <div class="single-post-content"><p>{{.Post.Content}}</p></div>
+            <div class="single-post-update">Last update: {{.Post.UpdatedStr}}</div>
+        </div>
+    </div>
+    <div class="add-comment">
+        {{if .User}}
+            <label class="add-comment-author" for="new-comment">Comment as {{.User.Name}}</label>
+        {{end}}
+        <button class="addCommentBtn" id="addCommentBtn" type="submit">Add</button>      
+    </div>
+    <div class="single-post-comments">
+        {{if .User}}
+            {{range .Comments}}
+                    {{if eq $.User.ID .User_ID}}
+                        <div class="comments">
+                            <div class="else-comment">
+                                <div class="comment-author">
+                                    {{.Author}} commented:
+                                </div>
+                                <div class="comment-content">
+                                    {{.Content}}
+                                </div>
+                            </div>
+                       
+                    {{else}}
+                       
+                            <div class="my-comment">
+                                <div class="my-comment-author">
+                                    You commented:
+                                </div>
+                                <div class="my-comment-content">
+                                    {{.Content}}
+                                </div>
+                            </div>
+
+                        </div>
+                            
+                            
+                    {{end}}
+            {{end}}
+        {{else}}
+            <div class="comments">
+            {{range .Comments}}
+            <div class="comment">
+                <div class="comment-author">
+                    {{.Author}} commented:
+                </div>
+                <div class="comment-content">
+                    {{.Content}}
+                </div>
+
+            </div>
+            {{end}}
+            </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+{{define "scripts"}}
+   <script src="/static/js/post.js"></script>
+   <script src="/static/js/global.js"></script>
+{{end}}
+
+
+
+

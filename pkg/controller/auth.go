@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
 	"github.com/gofrs/uuid"
 )
 
@@ -38,7 +37,6 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
-		http.Redirect(w, r, "/sign-in", http.StatusFound)
 
 	default:
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
