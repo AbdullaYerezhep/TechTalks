@@ -5,7 +5,7 @@
 }
 
 .main {
-    background-color:black;
+    background-color:#030303;
     color: #EDEDED;
     display: flex;
     flex-direction: column;
@@ -110,27 +110,24 @@
 }
 
 
-.dislikeBtn, .likeBtn {
+.post-dislikeBtn, .comment-dislikeBtn, .post-likeBtn, .comment-likeBtn  {
     border:none;
     background-color: #f5f5f500;
     color:#EDEDED;
 }
 
-.dislikeBtn:hover, .likeBtn:hover {
+.post-dislikeBtn:hover, .comment-dislikeBtn:hover, .post-likeBtn:hover, .comment-likeBtn:hover {
     cursor:pointer;
 }
 
-.dislikeBtn:hover [class^="pattern"]{
+.post-dislikeBtn:hover [class^="pattern"], .comment-dislikeBtn:hover [class^="pattern"]{
     stroke: rgb(43, 194, 245);
     
 }
 
-.likeBtn:hover [class^="pattern"] {
+.post-likeBtn:hover [class^="pattern"], .comment-likeBtn:hover [class^="pattern"] {
     stroke:#f87543;
-    
 }
-
-
 
 .pattern-rect {
     stroke: rgb(255, 255, 255);

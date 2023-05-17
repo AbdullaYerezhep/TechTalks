@@ -10,7 +10,7 @@ let isAuthenticated = (user_id.length === 0)
 
 addCommentSubmitButton.addEventListener("click", () => {
     let content = document.getElementById("new-comment").value
-    let body = {content: content, post_id: post_id}
+    let body = {content: content, post_id: +post_id}
     let url = "/comment"
     sendRequestPost(body, url)
 })
@@ -129,8 +129,9 @@ function sendRequestDelete(body, url) {
 }
 
 function sendRequestPost(body, url) {
+    console.log(body, url)
     fetch(url, {
-            method: "DELETE",
+            method: "POST",
             body: JSON.stringify(body),
             headers: {
             "Content-Type": "application/json"

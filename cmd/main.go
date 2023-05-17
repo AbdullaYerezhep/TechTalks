@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	port := "8001"
+	port := "8000"
 
 	// infoLog - reports the program process
 	infoLog := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)

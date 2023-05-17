@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"forum/models"
 	"net/http"
 	"time"
@@ -10,18 +11,18 @@ import (
 func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	decoder := json.NewDecoder(r.Body)
-
 	var com models.Comment
-
+	
 	if err := decoder.Decode(&com); err != nil {
 		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
 		return
 	}
-
-	post_id := r.Context().Value(keyPost)
+	
+	fmt.Println(com.Post_ID)
+	fmt.Println(com.Content)
 
 	current_time := time.Now().Format("02-01-2006 15:04")
-	com.Post_ID = post_id.(int)
+	// com.Post_ID = post_id.(int)
 	com.User_ID = user_id.(int)
 	com.Created = current_time
 

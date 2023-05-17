@@ -58,9 +58,9 @@
         <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
         <form action="/sign-up" class="signUpForm" method="POST">
             <label for="username">Username</label>
-            <input type="text" name="username" required>
+            <input type="text" class="signUpInputText" name="username" required>
             <label for="email">Email</label>
-            <input type="text" name="email" required>
+            <input type="text" class="signUpInputText"name="email" required>
             <label for="pasword">Pasword</label>
             <input type="password" name="password">
             <label for="confirmPass">Confirm password</label>
@@ -81,7 +81,7 @@
         <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
         <form action="/sign-in" class="signInForm" method="POST">
             <label for="username">Username</label>
-            <input type="text" name="username" required>
+            <input type="text" name="username" class="signInInputUsername" required>
             <label for="password">Password</label>
             <input type="password" name="password" required>
             <button class="signInBtn" type="submit" value="Login">Sign in</button>
@@ -104,7 +104,7 @@
     </g>
     </g>
     </g>
-</svg>"
+</svg>
 {{end}}
 
 {{define "dislike"}} 

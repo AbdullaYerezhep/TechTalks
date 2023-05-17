@@ -37,16 +37,16 @@ func (r *CommentSQL) GetComment(id int) (models.Comment, error) {
 
 func (r *CommentSQL) GetPostComments(post_id int) ([]models.Comment, error) {
 	query := `SELECT 
-		comment.id, 
-		comment.user_id, 
-		comment.username, 
-		comment.post_id, 
-		comment.content, 
-		comment.created, 
-		comment.updated, 
+		comment.id,
+		comment.user_id,
+		comment.username,
+		comment.post_id,
+		comment.content,
+		comment.created,
+		comment.updated,
 	    COUNT(comment_rating.islike) as likes,
 	    COUNT(CASE WHEN comment_rating.islike = -1 THEN 1 END) as dislikes
-	FROM 
+	FROM
 		comment
 	LEFT JOIN comment_rating ON comment.id = comment_rating.comment_id
 	WHERE comment.post_id = ?
