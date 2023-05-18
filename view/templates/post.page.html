@@ -17,7 +17,7 @@
 {{define "body"}}
 <div id="overlay"></div>
 <div id="post_id" hidden>{{.Post.ID}}</div>
-<div id="user_id" hidden>{{if .User}}{{.User.ID}}{{end}}</div>
+<div id="user_id" user-id={{if .User}}{{.User.ID}}{{end}} hidden></div>
 <div class="single-post-container">
     <div class="single-post-actions">
         {{if .User}}
@@ -96,11 +96,11 @@
                             </details>
                             <div class="rating">
                                 <div  class="comment-likeBtn" comment-id={{.ID}}>
-                                    <p class="likes">{{.Likes}}</p>
+                                    <span class="likes">{{.Likes}}</span>
                                     {{template "like" .}}
                                 </div>
                                 <div class="comment-dislikeBtn" comment-id={{.ID}}>
-                                    <p class="dislikes">{{.Dislikes}}</p>
+                                    <span class="dislikes">{{.Dislikes}}</span>
                                     {{template "dislike" .}}
                                 </div>
                             </div>
@@ -117,11 +117,11 @@
                             </div>
                             <div class="rating">
                                 <div class="comment-likeBtn" comment-id={{.ID}}>
-                                    <p class="likes">{{.Likes}}</p>
+                                    <span class="likes">{{.Likes}}</span>
                                     {{template "like" .}}
                                 </div>
                                 <div class="comment-dislikeBtn" comment-id={{.ID}}>
-                                    <p class="dislikes">{{.Dislikes}}</p>
+                                    <span class="dislikes">{{.Dislikes}}</span>
                                     {{template "dislike" .}}
                                 </div>
                             </div>
@@ -141,11 +141,11 @@
                         </div>
                         <div class="rating">
                             <div class="comment-likeBtn" comment-id={{.ID}}>
-                                <p class="likes">{{.Likes}}</p>
+                                <span class="likes">{{.Likes}}</span>
                                 {{template "like" .}}
                             </div>
                             <div class="comment-dislikeBtn" comment-id={{.ID}}>
-                                <p class="dislikes">{{.Dislikes}}</p>
+                                <span class="dislikes">{{.Dislikes}}</span>
                                 {{template "dislike" .}}
                             </div>
                         </div>
@@ -158,9 +158,9 @@
 {{end}}
 
 {{define "scripts"}}
+   <script src="/static/js/script.js"></script>
    <script src="/static/js/post.js"></script>
    <script src="/static/js/global.js"></script>
-   <script src="/static/js/script.js"></script>
 {{end}}
 
 

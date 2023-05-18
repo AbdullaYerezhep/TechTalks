@@ -3,47 +3,43 @@ function editComment(id) {
     document.getElementById("edit-comment-" + id).style.display = "block";
 }
 
-postLikeButtons = document.querySelectorAll(".post-likeBtn")
-postDislikeButtons = document.querySelectorAll(".post-dislikeBtn")
+let userID = document.getElementById("user_id").getAttribute("user-id");
+const isAuthenticated = userID !== null && userID !== "";
 
-commentLikeButtons = document.querySelectorAll(".comment-likeBtn")
-commentDislikeButtons = document.querySelectorAll(".comment-dislikeBtn")
+let postLikeButtons = document.querySelectorAll(".post-likeBtn")
+let postDislikeButtons = document.querySelectorAll(".post-dislikeBtn")
 
-console.log(commentLikeButtons);
+function signInPrompt() {
+    signInContainer.classList.remove("hidden");
+    overlay.style.display = "block"
+}
+
 postLikeButtons.forEach(button => {
     let post_id = button.getAttribute("post-id")
-    button.addEventListener("click",() =>{
-        let body = {post_id:+post_id, islike:1}
-        let url = "/post/rate/"
-        console.log(body, url);
-        submitRating(body, url, 1)
+    button.addEventListener("click",(event) => {
+        event.stopPropagation();
+        if (isAuthenticated) {
+            let body = {post_id:+post_id, islike:1}
+            let url = "/post/rate/"
+            console.log(body, url);
+            submitRating(body, url, 1)
+        }else{
+            signInPrompt()
+        }
     })
 });
 
 postDislikeButtons.forEach(button => {
     let post_id = button.getAttribute("post-id")
-    button.addEventListener("click", () => {
-        let body = { post_id: +post_id, islike: -1 }
-        let url = "/post/rate/"
-        submitRating(body, url)
-    })
-});
-
-commentLikeButtons.forEach(button => {
-    let comment_id = button.getAttribute("comment-id")
-    button.addEventListener("click", () => {
-        let body = { comment_id: +comment_id, islike: 1 }
-        let url = "/comment/rate/"
-        submitRating(body, url)
-    })
-});
-
-commentDislikeButtons.forEach(button => {
-    let comment_id = button.getAttribute("comment-id")
-    button.addEventListener("click", () => {
-        let body = { comment_id: +comment_id, islike: -1 }
-        let url = "/comment/rate/"
-        submitRating(body, url)
+    button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (isAuthenticated) {
+            let body = { post_id: +post_id, islike: -1 }
+            let url = "/post/rate/"
+            submitRating(body, url)
+        }else{
+            signInPrompt()
+        }
     })
 });
 

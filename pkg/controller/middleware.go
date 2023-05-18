@@ -33,7 +33,6 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 			return
 		}
 		session, err := h.srv.Session.GetSession(token.Value)
@@ -45,7 +44,6 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 			return
 		}
 
@@ -60,7 +58,6 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 			return
 		}
 		ctx := context.WithValue(r.Context(), keyUser, session.UserId)

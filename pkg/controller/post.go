@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+	"fmt"
 	"forum/models"
 	"net/http"
 	"time"
@@ -8,7 +10,9 @@ import (
 
 func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(keyUser)
+
 	switch r.Method {
+
 	case http.MethodGet:
 		var categories []string
 		categories, _ = h.srv.Post.GetCategories()
@@ -24,42 +28,41 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		user, err := h.srv.GetUserByID(id.(int))
+				
 		if err != nil {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
+		
+		decoder := json.NewDecoder(r.Body)
+		fmt.Println(r.Body)
+		var post models.Post
 
-		if err := r.ParseForm(); err != nil {
-			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
+		if err := decoder.Decode(&post); err != nil {
+			h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
 			return
 		}
 
 		currentTime := time.Now()
-		categories := r.Form["category[]"]
-		if len(categories) == 0 {
+
+		if len(post.Category) == 0 {
 			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
 			return
-		}
+		}		
 
-		post := models.Post{
-			User_ID:  user.ID,
-			Title:    r.FormValue("title"),
-			Author:   user.Name,
-			Category: categories,
-			Content:  r.FormValue("content"),
-			Created:  currentTime,
-			Updated:  currentTime,
-		}
+		post.User_ID = user.ID
+		post.Author  = user.Name
+		post.Created = currentTime
+		post.Updated = currentTime
 
 		if err = h.srv.CreatePost(post); err != nil {
 			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
 
-		http.Redirect(w, r, "/", http.StatusFound)
-
+		w.WriteHeader(http.StatusOK)
 	default:
-		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "Not allowed method")
 		return
 	}
 }

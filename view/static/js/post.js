@@ -1,12 +1,11 @@
 // add comment under post
 let post_id = document.getElementById("post_id").innerText
-let user_id = document.getElementById("user_id").innerText
-console.log(post_id, user_id);
 let addCommentButton = document.getElementById("addCommentBtn")
-
 let addCommentSubmitButton = document.getElementById("addCommentSubmitBtn")
-let isAuthenticated = (user_id.length === 0)
 
+let commentLikeButtons = document.querySelectorAll(".comment-likeBtn")
+let commentDislikeButtons = document.querySelectorAll(".comment-dislikeBtn")
+console.log(isAuthenticated);
 
 addCommentSubmitButton.addEventListener("click", () => {
     let content = document.getElementById("new-comment").value
@@ -18,6 +17,32 @@ addCommentSubmitButton.addEventListener("click", () => {
 addCommentButton.addEventListener("click", () => {
     signInPrompt()
 })
+
+commentLikeButtons.forEach(button => {
+    let comment_id = button.getAttribute("comment-id")
+    button.addEventListener("click", () => {
+        if (isAuthenticated) {
+            let body = { comment_id: +comment_id, islike: 1 }
+            let url = "/comment/rate/"
+            submitRating(body, url)
+        }else{
+            signInPrompt()
+        }
+    })
+});
+
+commentDislikeButtons.forEach(button => {
+    if (isAuthenticated) {
+        let comment_id = button.getAttribute("comment-id")
+        button.addEventListener("click", () => {
+            let body = { comment_id: +comment_id, islike: -1 }
+            let url = "/comment/rate/"
+            submitRating(body, url)
+        })
+    }else{
+        signInPrompt()
+    }
+});
 
 // updateComment.addEventListener("click", ()=>{
 //     let body = {}
@@ -59,15 +84,7 @@ addCommentButton.addEventListener("click", () => {
 //     }
 // })
 
-// ratePost.addEventListener("click", ()=>{
-//     let body = {}
-//     let url = ""
-//     if (isAuthenticated){
-//         signInPrompt()
-//     }else{
-//         sendRequest()
-//     }
-// })
+
 
 // rateComment.addEventListener("click", ()=>{
 //     let body = {}
@@ -78,13 +95,6 @@ addCommentButton.addEventListener("click", () => {
 //         sendRequest()
 //     }
 // })
-
-
-
-function signInPrompt() {
-    signInContainer.classList.remove("hidden");
-    overlay.style.display = "block"
-}
 
 
 function sendRequestEdit(body, url) {

@@ -19,7 +19,7 @@ func (h *Handler) errorMsg(w http.ResponseWriter, status int, tmpl, msg string) 
 		CustomText: msg,
 	}
 	w.WriteHeader(status)
-	if err := templates[tmpl].Execute(w, e); err != nil {
+	if err := templates["error"].Execute(w, e); err != nil {
 		fmt.Fprint(w, http.StatusInternalServerError)
 		return
 	}

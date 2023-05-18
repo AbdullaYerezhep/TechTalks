@@ -167,5 +167,6 @@ p{
 .categoryInput:checked ~ .checkmark {
   background-color: #f87543;
   color: #f5f5f5;
+  border: 1px solid #f87543;
 }
   

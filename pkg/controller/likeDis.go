@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"forum/models"
 	"net/http"
 )
@@ -22,7 +21,6 @@ func (h *Handler) ratePost(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
 		return
 	}
-	fmt.Println(rate.IsLike)
 	rate.User_ID = user_id.(int)
 
 	if err := h.srv.Post.RatePost(rate); err != nil {
@@ -47,7 +45,6 @@ func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
 		return
 	}
-	fmt.Println(rate.IsLike)
 	rate.User_ID = user_id.(int)
 
 	if err := h.srv.Comment.RateComment(rate); err != nil {

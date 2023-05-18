@@ -26,7 +26,7 @@ type Post struct {
 	ID         int      `json:"id"`
 	User_ID    int      `json:"user_id"`
 	Author     string   `json:"author"`
-	Category   []string `json:"categoires"`
+	Category   []string `json:"categories"`
 	Title      string   `json:"title"`
 	Content    string   `json:"content"`
 	Created    time.Time

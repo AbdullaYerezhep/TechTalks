@@ -13,6 +13,7 @@
 {{end}}
 
 {{define "body"}}
+<div id="user_id" user-id={{.User.ID}} hidden></div>
 <div id="overlay"></div>
     {{template "sign-up" .}}
     {{template "sign-in" .}}
@@ -22,11 +23,11 @@
             <div class="id" hidden>{{.ID}}</div>
             <div class="post-rating">
                 <div class="post-likes">
-                    <p class="likes">{{.Likes}}</p>
+                    <span class="likes">{{.Likes}}</span>
                     <button class="post-likeBtn"  post-id={{.ID}} type="submit">{{template "like" .}}</button>
                 </div>
                 <div class="post-dislikes">
-                    <p class="dislikes">{{.Dislikes}}</p>
+                    <span class="dislikes">{{.Dislikes}}</span>
                     <button class="post-dislikeBtn" post-id={{.ID}} type="submit">{{template "dislike" .}}</button>
                 </div>
             </div>
@@ -50,7 +51,7 @@
 {{end}}
 
 {{define "scripts"}}
+<script src="/static/js/script.js"></script>
 <script src="/static/js/home.js"></script>
 <script src="/static/js/global.js"></script>
-<script src="/static/js/script.js"></script>
 {{end}}
