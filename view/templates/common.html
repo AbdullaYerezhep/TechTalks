@@ -32,7 +32,11 @@
         <a id="focus-Popular" role="menuitem" class="menuitem popular" aria-label="/popular" href="/popular"><img class="icon" src="/static/images/popular.svg"><span class="">Popular</span></a>
         <h3>TOPICS</h3>
         {{range .Categories}}
-            <a id="focus-{{.}}" role="menuitem" class="menuitem {{.}}" aria-label="/{{.}}" href="/{{.}}"><i class="icon icon-{{.}}"></i><span class="{{.}}">{{.}}</span></a>
+                <div class="menuitem menu-checkbox-container">
+                    <i class="icon icon-{{.}}"></i>
+                    <input type="checkbox" class="menuCategoryInput">
+                    <label class="menuCheckmark">{{.}}</label>
+                </div>
         {{end}}
     </div>
 

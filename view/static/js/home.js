@@ -14,4 +14,17 @@ function openPost(post) {
 }
 
 
-// rating logic
+// categories filter 
+
+let checkBoxContainers = document.querySelectorAll(".menu-checkbox-container")
+
+checkBoxContainers.forEach(checkBoxContainer => {
+    checkBoxContainer.addEventListener("click", ()=>{
+        checkBox(checkBoxContainer)
+    })
+});
+
+function checkBox(container) {
+    let checkBoxInput = container.querySelector(".menuCategoryInput")
+    checkBoxInput.checked = !checkBoxInput.checked
+}
