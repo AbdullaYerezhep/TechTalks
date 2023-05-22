@@ -8,7 +8,12 @@
             {{if .User.Name}}
                 <div class="user">
                     <a href="/post/add" class="new-post">+</a>
-                    <button id="button" class="profile">{{.User.Name}} </button>
+                    <details class="header-details">
+                        <summary class="header-username">{{.User.Name}}</summary>
+                        <div class="details-content"></div>
+                        <a class="headerMyPosts" href="/">My Posts</a>
+                        <a class="headerSignOut" href="/logout" >Sign Out</a>
+                    </details>
                 </div>
             {{else}}
                     <button  class="signInButton headerSignUpBtn">Sign in</a>
@@ -38,17 +43,16 @@
 
     <div class="menuAuth">
         {{if .User}}
-        {{if .User.Name}}
-            <a href="/logout" class="menuSignOut">Sign Out</a>
-        {{else}}
-            <p>Create an account to follow<br> your favorite communities<br> and start taking part in<br> conversations.</p>
-            <a class="signUpButton menuSignUp">Sign Up</a>
-        {{end}}
+            {{if .User.Name}}
+                <a href="/logout" class="menuSignOut">Sign Out</a>
+            {{else}}
+                <p>Create an account to follow<br> your favorite communities<br> and start taking part in<br> conversations.</p>
+                <a class="signUpButton menuSignUp">Sign Up</a>
+            {{end}}
         {{end}}
     </div>
 </div>
 {{end}}
-
 
 {{define "sign-up"}}
 <div id="signUpContainer" class="hidden">

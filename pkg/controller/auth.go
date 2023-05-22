@@ -50,7 +50,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		if err := templates["sign-in"].Execute(w, nil); err != nil {
 			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusInternalServerError, "error", "")
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
 			return
 		}
 

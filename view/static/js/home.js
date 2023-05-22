@@ -14,4 +14,10 @@ function openPost(post) {
 }
 
 
-// rating logic
+// my posts logic
+
+const myPostsButton = document.getElementsByClassName("headerMyPosts")
+
+myPostsButton.addEventListener("click", () => {
+    
+})

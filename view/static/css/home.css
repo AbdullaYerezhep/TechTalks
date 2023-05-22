@@ -1,3 +1,4 @@
+
 #body {
     width: 100%;
     height: 100vh;
@@ -98,7 +99,7 @@
 }
 
 .profile{
-    margin-right: 50px;
+    margin-right: 150px;
     border:none;
     color:#f87543;
     background-color:rgba(255, 255, 255, 0);
@@ -175,3 +176,38 @@
     nonzero; 
     opacity: 1;
 }
+
+.header-username {
+    font: size 16px;
+    font-weight: 300;
+    color:#f87543;
+}
+
+.header-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+    position:absolute;
+    max-height: 20px;
+    width:70px; 
+    right:80px;
+}
+.header-details[open] .details-content {
+    max-height: 20px; /* Adjust the value as needed */
+}
+
+.details-content {
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.header-details a {
+    text-decoration: none;
+    color: #EDEDED;
+}
+
+.header-details a:hover {
+    background-color: #adadad;
+}
+
