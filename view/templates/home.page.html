@@ -21,6 +21,7 @@
         {{range .Posts }}
         <div class="post">
             <div class="id" hidden>{{.ID}}</div>
+            <div class="author-id" author={{.User_ID}} hidden></div>
             <div class="post-rating">
                 <div class="post-likes">
                     <span class="likes">{{.Likes}}</span>
@@ -35,7 +36,7 @@
                 <div class="post-categories">
                     {{range .Category}}
                         <div class="post-category">{{.}}</div>
-                    {{end}}
+                    {{end}} 
                 </div>
                 <div class="post-author">Posted by: {{.Author}} at {{.Created}}</div>
                 <div class="post-title">{{ .Title }}</div>

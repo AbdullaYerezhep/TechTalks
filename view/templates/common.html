@@ -11,7 +11,7 @@
                     <details class="header-details">
                         <summary class="header-username">{{.User.Name}}</summary>
                         <div class="details-content"></div>
-                        <a class="headerMyPosts" href="/">My Posts</a>
+                        <span class="headerMyPosts">My Posts</span>
                         <a class="headerSignOut" href="/logout" >Sign Out</a>
                     </details>
                 </div>
@@ -23,11 +23,7 @@
 {{end}}
 
 
-{{define "footer"}}
-<footer>
-    <p>Created by <a href="https://01.alem.school/git/Freer/forum"> MAA (Meirbek && Adai && Abdulla) &copy;</a> in 2023</p>
-</footer>
-{{end}}
+
 
 {{define "menu"}}
 <div class="menu">
@@ -39,7 +35,7 @@
         {{range .Categories}}
                 <div class="menuitem menu-checkbox-container">
                     <i class="icon icon-{{.}}"></i>
-                    <input type="checkbox" class="menuCategoryInput">
+                    <input type="checkbox" class="menuCategoryInput" value="{{.}}">
                     <label class="menuCheckmark">{{.}}</label>
                 </div>
         {{end}}

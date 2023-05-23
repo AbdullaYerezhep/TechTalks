@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"forum/models"
+	"forum/models"	
 	"net/http"
-	"forum/models"
 )
 
 func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {

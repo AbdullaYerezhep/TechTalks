@@ -104,7 +104,6 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 			&post.ID,
 			&post.User_ID,
 			&post.Author,
-			&categories, // Scan as sql.NullString
 			&post.Title,
 			&post.Content,
 			&post.Created,
@@ -112,6 +111,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 			&post.Comments,
 			&post.Likes,
 			&post.Dislikes,
+			&categories, // Scan as sql.NullString
 		)
 		if err != nil {
 			// Handle the error

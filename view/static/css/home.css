@@ -29,7 +29,6 @@
     left:0;
     background-color: #1f1f1f;
     color:#EDEDED;
-    padding: 50px 10px 150px 10px;
     justify-content: space-between;
     height:100vh;
     width:250px;
@@ -96,6 +95,7 @@
     border-radius: 13%;
     text-align: center;
     width: 59px;
+    margin-right:150px;
 }
 
 .profile{
@@ -191,8 +191,13 @@
     position:absolute;
     max-height: 20px;
     width:70px; 
-    right:80px;
+    right:40px;
 }
+
+.header-details:hover {
+    cursor:pointer;
+}
+
 .header-details[open] .details-content {
     max-height: 20px; /* Adjust the value as needed */
 }
@@ -207,8 +212,18 @@
     color: #EDEDED;
 }
 
+.header-details span {
+    text-decoration: none;
+    color: #EDEDED;
+}
+
 .header-details a:hover {
     background-color: #adadad;
+}
+
+.header-details span:hover {
+    background-color: #adadad;
+    cursor: pointer;
 }
 
 
