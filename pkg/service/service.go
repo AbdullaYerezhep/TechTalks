@@ -21,7 +21,7 @@ type Post interface {
 	CreatePost(p models.Post) error
 	GetPost(id int) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
-	UpdatePost(p models.Post) error
+	UpdatePost(user_id int, p models.Post) error
 	DeletePost(user_id, post_id int) error
 	GetCategories() ([]string, error)
 	RatePost(models.RatePost) error
@@ -31,8 +31,8 @@ type Comment interface {
 	AddComment(models.Comment) error
 	GetComment(id int) (models.Comment, error)
 	GetPostComments(id int) ([]models.Comment, error)
-	UpdateComment(models.Comment) error
-	DeleteComment(id int) error
+	UpdateComment(user_id int, com models.Comment) error
+	DeleteComment(user_id, comment_id int) error
 	RateComment(models.RateComment) error
 }
 

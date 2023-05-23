@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"forum/models"
 	"forum/pkg/repository"
 
@@ -16,7 +15,11 @@ func NewAuth(repo repository.Authorization) *AuthService {
 	return &AuthService{repo: repo}
 }
 
+// New user actions
 func (s *AuthService) CreateUser(u models.User) error {
+	if err := validateNewUserData(u); err != nil {
+		return err
+	}
 	u.Password = getHash(u.Password)
 	return s.repo.CreateUser(u)
 }
@@ -27,8 +30,10 @@ func (s *AuthService) GetUserByID(id int) (models.User, error) {
 
 func (s *AuthService) GetUser(name, password string) (models.User, error) {
 	user, err := s.repo.GetUser(name)
-	if err != nil || !verifyPass(password, user.Password) {
-		return user, errors.New("user not found")
+	if err != nil {
+		return models.User{}, ErrUserNotFound
+	} else if !verifyPass(password, user.Password) {
+		return models.User{}, ErrWrongPassword
 	}
 	return user, nil
 }

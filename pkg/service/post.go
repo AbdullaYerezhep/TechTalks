@@ -1,9 +1,10 @@
 package service
 
 import (
-	"errors"
+	"fmt"
 	"forum/models"
 	"forum/pkg/repository"
+	"time"
 )
 
 type PostService struct {
@@ -23,9 +24,11 @@ func (s *PostService) CreatePost(p models.Post) error {
 	if err != nil {
 		return err
 	}
-	if !containsAll(p.Category, cats) {
-		return errors.New("invalid category")
+	cat := containsAll(p.Category, cats)
+	if cat != "" {
+		return fmt.Errorf("invalid category %s", cat)
 	}
+	p.Created = time.Now().Format("02-01-2006 15:04")
 	return s.repo.CreatePost(p)
 }
 
@@ -41,8 +44,22 @@ func (s *PostService) GetAllPosts() ([]models.Post, error) {
 	return s.repo.GetAllPosts()
 }
 
-func (s *PostService) UpdatePost(p models.Post) error {
-	return s.repo.UpdatePost(p)
+func (s *PostService) UpdatePost(user_id int, updatedPost models.Post) error {
+	post, err := s.repo.GetPost(updatedPost.ID)
+	if err != nil {
+		return err
+	}
+
+	if post.User_ID != user_id {
+		return ErrPermission
+	}
+
+	post.Title = updatedPost.Title
+	post.Content = updatedPost.Content
+	now := time.Now().Format("02-01-2006 15:04")
+	post.Updated = &now
+
+	return s.repo.UpdatePost(post)
 }
 
 func (s *PostService) DeletePost(user_id, post_id int) error {
@@ -53,7 +70,7 @@ func (s *PostService) RatePost(rate models.RatePost) error {
 	return s.repo.LikeDis(rate)
 }
 
-func containsAll(list, target []string) bool {
+func containsAll(list, target []string) string {
 	for i := range list {
 		contains := false
 		for j := range target {
@@ -63,8 +80,8 @@ func containsAll(list, target []string) bool {
 			}
 		}
 		if !contains {
-			return false
+			return list[i]
 		}
 	}
-	return true
+	return ""
 }

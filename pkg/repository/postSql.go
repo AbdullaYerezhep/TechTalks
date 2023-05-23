@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"forum/models"
-	"strings"
 )
 
 type PostSQL struct {
@@ -72,23 +71,20 @@ func (r *PostSQL) GetPost(id int) (models.Post, error) {
 // Get all posts with their categories and number of likes, dislikes and comments.
 func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 	query := `SELECT
-    post.id,
-    post.user_id,
-    post.author,
-    post.title,
-    post.content,
-    post.created,
-    post.updated,
-    COUNT(DISTINCT comment.id) AS comment_count,
-    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
-    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count,
-    GROUP_CONCAT(DISTINCT category.name) AS categories
-FROM post
-LEFT JOIN comment ON post.id = comment.post_id
-LEFT JOIN post_rating AS pr ON post.id = pr.post_id
-LEFT JOIN post_category AS pc ON post.id = pc.post_id
-LEFT JOIN category ON pc.category_name = category.name
-GROUP BY post.id;`
+	    post.id,
+	    post.user_id,
+	    post.author,
+	    post.title,
+	    post.content,
+	    post.created,
+	    post.updated,
+	    COUNT(DISTINCT comment.id) AS comment_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count
+	FROM post
+	LEFT JOIN comment ON post.id = comment.post_id
+	LEFT JOIN post_rating as pr ON post.id = pr.post_id
+	GROUP BY post.id;`
 
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -98,7 +94,6 @@ GROUP BY post.id;`
 	posts := []models.Post{}
 	for rows.Next() {
 		var post models.Post
-		var categories sql.NullString // Add a variable to hold the concatenated categories as a string
 		err = rows.Scan(
 			&post.ID,
 			&post.User_ID,
@@ -110,12 +105,10 @@ GROUP BY post.id;`
 			&post.Comments,
 			&post.Likes,
 			&post.Dislikes,
-			&categories, // Scan the concatenated categories into a string variable
 		)
 		if err != nil {
 			return nil, err
 		}
-		post.Category = strings.Split(categories.String, ",") // Split the string into a slice of categories
 		posts = append(posts, post)
 	}
 	if err = rows.Err(); err != nil {

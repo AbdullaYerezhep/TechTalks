@@ -1,11 +1,10 @@
 package controller
 
 import (
-	"errors"
 	"forum/models"
 	"net/http"
-	"net/url"
 	"time"
+
 	"github.com/gofrs/uuid"
 )
 
@@ -25,11 +24,18 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 			h.errorMsg(w, http.StatusBadRequest, "sign-up", err.Error())
 			return
 		}
-		user, err := decodeForm(r.Form)
-		if err != nil {
-			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusBadRequest, "sign-up", err.Error())
+
+		password := r.FormValue("password")
+		connfirmPass := r.FormValue("confirmPass")
+
+		if password != connfirmPass {
 			return
+		}
+
+		user := models.User{
+			Name:     r.FormValue("username"),
+			Email:    r.FormValue("email"),
+			Password: r.FormValue("password"),
 		}
 
 		if err := h.srv.CreateUser(user); err != nil {
@@ -111,23 +117,4 @@ func newSession(user_id int) models.Session {
 	s.Token = token.String()
 	s.Expiration_date = time.Now().Add(1 * time.Hour)
 	return s
-}
-
-func decodeForm(form url.Values) (models.User, error) {
-	var u models.User
-	name, okName := form["username"]
-	email, okEmail := form["email"]
-	password, okPass := form["password"]
-	confirmPass, okConfirm := form["confirmPass"]
-	if !okName || !okEmail || !okPass || !okConfirm {
-		return u, errors.New("form modified")
-	}
-	if err := validateNewUserData(name[0], email[0], password[0], confirmPass[0]); err != nil {
-		return u, err
-	}
-	u.Name = name[0]
-	u.Email = email[0]
-	u.Password = password[0]
-
-	return u, nil
 }

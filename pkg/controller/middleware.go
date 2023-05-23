@@ -3,9 +3,11 @@ package controller
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"forum/models"
 	"net/http"
-	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,8 +19,8 @@ const (
 type ctxKey string
 
 const (
-	keyUser = ctxKey("user_id")
-	keyPost = ctxKey("post_id")
+	keyUser    = ctxKey("user_id")
+	keyRequest = ctxKey("requestData")
 )
 
 // Middleware "checkAccess" works on two modes. If it doesn't validate the token.
@@ -33,7 +35,7 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		session, err := h.srv.Session.GetSession(token.Value)
@@ -45,7 +47,7 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
@@ -60,7 +62,7 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 				next.ServeHTTP(w, r)
 				return
 			}
-			http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		ctx := context.WithValue(r.Context(), keyUser, session.UserId)
@@ -68,17 +70,61 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 	})
 }
 
-// getPostId - sends post_id in context.
-func (h *Handler) getPostID(next http.HandlerFunc) http.HandlerFunc {
+func (h *Handler) decodeRequest(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		post_id_str := r.URL.Query().Get("id")
-		postID, err := strconv.Atoi(post_id_str)
-		if err != nil {
-			h.errorMsg(w, http.StatusBadRequest, "error", err.Error())
+
+		if r.Method == http.MethodGet {
+			next.ServeHTTP(w, r)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), keyPost, postID)
+		decoder := json.NewDecoder(r.Body)
+		var post models.Post
+		var com models.Comment
+		ctx := context.WithValue(r.Context(), keyRequest, nil)
+
+		if strings.HasPrefix(r.URL.Path, "/post") {
+			if err := decoder.Decode(&post); err != nil {
+				h.errLog.Println(err)
+				h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+				return
+			}
+
+			ctx = context.WithValue(r.Context(), keyRequest, post)
+
+		} else if strings.HasPrefix(r.URL.Path, "/comment") {
+			if err := decoder.Decode(&com); err != nil {
+				h.errLog.Println(err)
+				h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+				return
+			}
+
+			ctx = context.WithValue(r.Context(), keyRequest, com)
+		} else {
+			next.ServeHTTP(w, r)
+		}
+
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+
+// func (h *Handler) decodeComment(next http.HandlerFunc) http.HandlerFunc {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		if r.Method == http.MethodGet {
+// 			next.ServeHTTP(w, r)
+// 			return
+// 		}
+// 		decoder := json.NewDecoder(r.Body)
+
+// 		var com models.Comment
+
+// 		if err := decoder.Decode(&com); err != nil {
+// 			h.errLog.Println(err.Error())
+// 			h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
+// 			return
+// 		}
+
+// 		ctx := context.WithValue(r.Context(), keyComment, com)
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+// }
