@@ -23,6 +23,7 @@ func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// edit comment
 func (h *Handler) editComment(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	com, ok := r.Context().Value(keyRequest).(models.Comment)
@@ -40,6 +41,7 @@ func (h *Handler) editComment(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// delete comment
 func (h *Handler) deleteComment(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(keyUser)
 	com, ok := r.Context().Value(keyRequest).(models.Comment)

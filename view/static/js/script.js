@@ -20,7 +20,7 @@ postLikeButtons.forEach(button => {
         event.stopPropagation();
         if (isAuthenticated) {
             let body = {post_id:+post_id, islike:1}
-            let url = "/post/rate/"
+            let url = "/post/rate"
             console.log(body, url);
             submitRating(body, url, 1)
         }else{
@@ -35,7 +35,7 @@ postDislikeButtons.forEach(button => {
         event.stopPropagation();
         if (isAuthenticated) {
             let body = { post_id: +post_id, islike: -1 }
-            let url = "/post/rate/"
+            let url = "/post/rate"
             submitRating(body, url)
         }else{
             signInPrompt()
