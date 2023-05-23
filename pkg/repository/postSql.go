@@ -53,7 +53,7 @@ func (r *PostSQL) CreatePost(p models.Post) error {
 func (r *PostSQL) GetPost(id int) (models.Post, error) {
 	var p models.Post
 	query := `
-	SELECT post.id, post.user_id, post.author, post.title, post.content, post.created, post.updated,
+	SELECT post.*,
 		COUNT(CASE WHEN post_rating.islike = 1 THEN 1 END) AS likes, 
 		COUNT(CASE WHEN post_rating.islike = -1 THEN 1 END) AS dislikes
 	FROM 
@@ -71,14 +71,7 @@ func (r *PostSQL) GetPost(id int) (models.Post, error) {
 
 // Get all posts with their categories and number of likes, dislikes and comments.
 func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
-	query := `SELECT
-	    post.id,
-	    post.user_id,
-	    post.author,
-	    post.title,
-	    post.content,
-	    post.created,
-	    post.updated,
+	query := `SELECT post.*,
 	    COUNT(DISTINCT comment.id) AS comment_count,
 	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
 	    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count,

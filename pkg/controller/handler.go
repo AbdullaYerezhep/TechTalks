@@ -20,6 +20,26 @@ func New(info, err *log.Logger, srv *service.Service) *Handler {
 	}
 }
 
+// func (h *Handler) Router(r *router.Router) {
+// 	r.Post("/sign-up", h.signUp)
+// 	r.Post("/sign-in", h.signIn)
+// 	r.Post("/logout", h.logOut)
+
+// 	r.Get("/", h.home)
+// 	r.Post("/", h.home)
+
+// 	r.Get("/post/", h.postDetails)
+// 	r.Post("/post/add", h.addPost)
+// 	r.Put("/post/edit", h.updatePost)
+// 	r.Delete("/post/delete", h.deletePost)
+// 	r.Post("/post/rate", h.ratePost)
+
+// 	r.Post("/comment", h.addComment)
+// 	r.Put("/comment/edit", h.editComment)
+// 	r.Delete("/comment/delete", h.addComment)
+// 	r.Post("/comment/rate", h.rateComment)
+// }
+
 func (h *Handler) Router() *http.ServeMux {
 	mux := http.NewServeMux()
 
