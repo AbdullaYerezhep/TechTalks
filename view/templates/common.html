@@ -8,7 +8,12 @@
             {{if .User.Name}}
                 <div class="user">
                     <a href="/post/add" class="new-post">+</a>
-                    <button id="button" class="profile">{{.User.Name}} </button>
+                    <details class="header-details">
+                        <summary class="header-username">{{.User.Name}}</summary>
+                        <div class="details-content"></div>
+                        <a class="headerMyPosts" href="/">My Posts</a>
+                        <a class="headerSignOut" href="/logout" >Sign Out</a>
+                    </details>
                 </div>
             {{else}}
                     <button  class="signInButton headerSignUpBtn">Sign in</a>
@@ -32,23 +37,26 @@
         <a id="focus-Popular" role="menuitem" class="menuitem popular" aria-label="/popular" href="/popular"><img class="icon" src="/static/images/popular.svg"><span class="">Popular</span></a>
         <h3>TOPICS</h3>
         {{range .Categories}}
-            <a id="focus-{{.}}" role="menuitem" class="menuitem {{.}}" aria-label="/{{.}}" href="/{{.}}"><i class="icon icon-{{.}}"></i><span class="{{.}}">{{.}}</span></a>
+                <div class="menuitem menu-checkbox-container">
+                    <i class="icon icon-{{.}}"></i>
+                    <input type="checkbox" class="menuCategoryInput">
+                    <label class="menuCheckmark">{{.}}</label>
+                </div>
         {{end}}
     </div>
 
     <div class="menuAuth">
         {{if .User}}
-        {{if .User.Name}}
-            <a href="/logout" class="menuSignOut">Sign Out</a>
-        {{else}}
-            <p>Create an account to follow<br> your favorite communities<br> and start taking part in<br> conversations.</p>
-            <a class="signUpButton menuSignUp">Sign Up</a>
-        {{end}}
+            {{if .User.Name}}
+                <a href="/logout" class="menuSignOut">Sign Out</a>
+            {{else}}
+                <p>Create an account to follow<br> your favorite communities<br> and start taking part in<br> conversations.</p>
+                <a class="signUpButton menuSignUp">Sign Up</a>
+            {{end}}
         {{end}}
     </div>
 </div>
 {{end}}
-
 
 {{define "sign-up"}}
 <div id="signUpContainer" class="hidden">
@@ -58,9 +66,9 @@
         <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
         <form action="/sign-up" class="signUpForm" method="POST">
             <label for="username">Username</label>
-            <input type="text" name="username" required>
+            <input type="text" class="signUpInputText" name="username" required>
             <label for="email">Email</label>
-            <input type="text" name="email" required>
+            <input type="text" class="signUpInputText"name="email" required>
             <label for="pasword">Pasword</label>
             <input type="password" name="password">
             <label for="confirmPass">Confirm password</label>
@@ -81,7 +89,7 @@
         <p>By continuing, you are setting up a TECH talks<br>account and agree to our User Agreement and<br>Privacy Policy. </p>
         <form action="/sign-in" class="signInForm" method="POST">
             <label for="username">Username</label>
-            <input type="text" name="username" required>
+            <input type="text" name="username" class="signInInputUsername" required>
             <label for="password">Password</label>
             <input type="password" name="password" required>
             <button class="signInBtn" type="submit" value="Login">Sign in</button>
@@ -104,7 +112,7 @@
     </g>
     </g>
     </g>
-</svg>"
+</svg>
 {{end}}
 
 {{define "dislike"}} 

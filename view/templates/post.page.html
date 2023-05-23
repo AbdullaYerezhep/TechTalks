@@ -17,7 +17,7 @@
 {{define "body"}}
 <div id="overlay"></div>
 <div id="post_id" hidden>{{.Post.ID}}</div>
-<div id="user_id" hidden>{{if .User}}{{.User.ID}}{{end}}</div>
+<div id="user_id" user-id={{if .User}}{{.User.ID}}{{end}} hidden></div>
 <div class="single-post-container">
     <div class="single-post-actions">
         {{if .User}}
@@ -36,14 +36,14 @@
     <div class="single-post">
         <div class="single-post-rating">
             <div class="single-post-likes">{{.Post.Likes}}
-                    <button class="likeBtn"  type="submit">
+                    <button class="post-likeBtn" post-id={{.Post.ID}} type="submit">
                         {{template "like" .}}
                     </button>
                 </form>
             </div>
             <div class="single-post-dislikes">{{.Post.Dislikes}}
                 
-                    <button class="dislikeBtn" type="submit">
+                    <button class="post-dislikeBtn" post-id={{.Post.ID}} type="submit">
                         {{template "dislike" .}}
                     </button>
                 </form>
@@ -65,88 +65,100 @@
         {{if .User}}
             <label class="add-comment-author" for="new-comment">Comment as {{.User.Name}}</label>
             <input type="text" name="comment-content" class="add-comment-input" id="new-comment">
-            <button class="addCommentSubmitBtn" id="addCommentSubmitBtn" type="submit">Add</button>      
+            <button class="addCommentSubmitBtn" id="addCommentSubmitBtn" type="submit">Add</button>  
+            <button class="addCommentBtn" id="addCommentBtn" type="submit" hidden><b>+</b>Add a Comment</button> 
+        {{else}}
+            <input type="text" name="comment-content" class="add-comment-input" id="new-comment" hidden>
+            <button class="addCommentSubmitBtn" id="addCommentSubmitBtn" type="submit" hidden>Add</button>
+            <button class="addCommentBtn" id="addCommentBtn" type="submit"><b>+</b>Add a Comment</button>    
         {{end}}
-        <input type="text" name="comment-content" class="add-comment-input" id="new-comment" hidden>
-        <button class="addCommentSubmitBtn" id="addCommentSubmitBtn" type="submit" hidden>Add</button>
-        <button class="addCommentBtn" id="addCommentBtn" type="submit"><b>+</b>Add a Comment</button>    
     </div>
     <div class="single-post-comments">
         {{if .User}}
-            {{range .Comments}}
-                    {{if eq $.User.ID .User_ID}}
-                    <div class="else-comment">
-                        <div class="rating">
-                            <div class="likeBtn">
-                                {{template "like" .}}
-                            </div>
-                            <div class="dislikeBtn">
-                                {{template "dislike" .}}
-                            </div>
-                        </div>
-                        <div class="comment-author">
-                            {{.Author}} commented:
-                        </div>
-                        <div class="comment-content">
-                            {{.Content}}
-                        </div>
-                    </div>
-                    {{else}}
-                    <div class="my-comment">
-                        <div class="rating">
-                            <div class="likeBtn">
-                                {{template "like" .}}
-                            </div>
-                            <div class="dislikeBtn">
-                                {{template "dislike" .}}
-                            </div>
-                        </div>
-                        <div class="my-comment-author">
-                            You commented:
-                        </div>
-                        <div class="my-comment-content">
-                            {{.Content}}
-                        </div>
-                        <details>
-                            <summary>...</summary>
-                            <button class="edit-comment">{{template "update" .}}</button>
-                            <button class="delete-comment">{{template "delete" .}}</button>
-                        </details>
-                            </div>
-                    </div>
-                    {{end}}
-            {{end}}
-        {{else}}
             <div class="comments">
+                {{range .Comments}}
+                    {{if eq $.User.ID .User_ID}}
+                        <div class="my-comment">
+                            <div class="my-comment-body">
+                                <div class="my-comment-author">
+                                    You commented:
+                                </div>
+                                <div class="my-comment-content">
+                                    {{.Content}}
+                                </div>
+                            </div>
+                            <details class="my-comment-details">
+                                <summary>Edit</summary>
+                                <div class="details-content">
+                                    <button class="edit-comment">{{template "update" .}}</button>
+                                    <button class="delete-comment">{{template "delete" .}}</button>
+                                </div>
+                            </details>
+                            <div class="rating">
+                                <div  class="comment-likeBtn" comment-id={{.ID}}>
+                                    <span class="likes">{{.Likes}}</span>
+                                    {{template "like" .}}
+                                </div>
+                                <div class="comment-dislikeBtn" comment-id={{.ID}}>
+                                    <span class="dislikes">{{.Dislikes}}</span>
+                                    {{template "dislike" .}}
+                                </div>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="else-comment">
+                            <div class="else-comment-body">
+                                <div class="else-comment-author">
+                                    {{.Author}} commented:
+                                </div>
+                                <div class="else-comment-content">
+                                    {{.Content}}
+                                </div>
+                            </div>
+                            <div class="rating">
+                                <div class="comment-likeBtn" comment-id={{.ID}}>
+                                    <span class="likes">{{.Likes}}</span>
+                                    {{template "like" .}}
+                                </div>
+                                <div class="comment-dislikeBtn" comment-id={{.ID}}>
+                                    <span class="dislikes">{{.Dislikes}}</span>
+                                    {{template "dislike" .}}
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                {{end}}
+        {{else}}
             {{range .Comments}}
-            <div class="comment">
-                <div class="rating">
-                    <div class="likeBtn">
-                        {{template "like" .}}
-                    </div>
-                    <div class="dislikeBtn">
-                        {{template "dislike" .}}
-                    </div>
+                <div class="comment">
+                        <div class="comment-body">
+                            <div class="comment-author">
+                                {{.Author}} commented:
+                            </div>
+                            <div class="comment-content">
+                                {{.Content}}
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <div class="comment-likeBtn" comment-id={{.ID}}>
+                                <span class="likes">{{.Likes}}</span>
+                                {{template "like" .}}
+                            </div>
+                            <div class="comment-dislikeBtn" comment-id={{.ID}}>
+                                <span class="dislikes">{{.Dislikes}}</span>
+                                {{template "dislike" .}}
+                            </div>
+                        </div>
                 </div>
-                <div class="comment-author">
-                    {{.Author}} commented:
-                </div>
-                <div class="comment-content">
-                    {{.Content}}
-                </div>
-                <details>
-                    <summary>...</summary>
-                    <button class="edit-comment">{{template "update" .}}</button>
-                    <button class="delete-comment">{{template "delete" .}}</button>
-                </details>
+                {{end}}
+                {{end}}
             </div>
-            {{end}}
-            </div>
-        {{end}}
     </div>
 </div>
 {{end}}
+
 {{define "scripts"}}
+   <script src="/static/js/script.js"></script>
    <script src="/static/js/post.js"></script>
    <script src="/static/js/global.js"></script>
 {{end}}

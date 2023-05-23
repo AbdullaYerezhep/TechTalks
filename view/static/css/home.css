@@ -1,3 +1,4 @@
+
 #body {
     width: 100%;
     height: 100vh;
@@ -5,7 +6,7 @@
 }
 
 .main {
-    background-color:black;
+    background-color:#030303;
     color: #EDEDED;
     display: flex;
     flex-direction: column;
@@ -98,7 +99,7 @@
 }
 
 .profile{
-    margin-right: 50px;
+    margin-right: 150px;
     border:none;
     color:#f87543;
     background-color:rgba(255, 255, 255, 0);
@@ -110,27 +111,24 @@
 }
 
 
-.dislikeBtn, .likeBtn {
+.post-dislikeBtn, .comment-dislikeBtn, .post-likeBtn, .comment-likeBtn  {
     border:none;
     background-color: #f5f5f500;
     color:#EDEDED;
 }
 
-.dislikeBtn:hover, .likeBtn:hover {
+.post-dislikeBtn:hover, .comment-dislikeBtn:hover, .post-likeBtn:hover, .comment-likeBtn:hover {
     cursor:pointer;
 }
 
-.dislikeBtn:hover [class^="pattern"]{
+.post-dislikeBtn:hover [class^="pattern"], .comment-dislikeBtn:hover [class^="pattern"]{
     stroke: rgb(43, 194, 245);
     
 }
 
-.likeBtn:hover [class^="pattern"] {
+.post-likeBtn:hover [class^="pattern"], .comment-likeBtn:hover [class^="pattern"] {
     stroke:#f87543;
-    
 }
-
-
 
 .pattern-rect {
     stroke: rgb(255, 255, 255);
@@ -177,4 +175,84 @@
     fill-rule: 
     nonzero; 
     opacity: 1;
+}
+
+.header-username {
+    font: size 16px;
+    font-weight: 300;
+    color:#f87543;
+}
+
+.header-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+    position:absolute;
+    max-height: 20px;
+    width:70px; 
+    right:80px;
+}
+.header-details[open] .details-content {
+    max-height: 20px; /* Adjust the value as needed */
+}
+
+.details-content {
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.header-details a {
+    text-decoration: none;
+    color: #EDEDED;
+}
+
+.header-details a:hover {
+    background-color: #adadad;
+}
+
+
+.menuCategoryInput {
+  display: none;
+}
+  
+/*   
+.menu-checkbox-container .menuCheckmark {
+  display: block;
+  height: 25px;
+  padding:10px;
+  width: 75px;
+  background-color: rgba(238, 238, 238, 0);
+  color: #ffffff;
+  border: 1px solid white;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+} */
+
+.menuCheckmark {
+    width: 100%;
+    color: #EDEDED;
+    font-weight: 400;
+}
+.menuCheckmark:hover {
+    color: #1c1c1c;
+}
+
+.menu-checkbox-container:hover {
+  background-color: #ccc;
+  color: #1c1c1c;
+}
+/* 
+.menuCategoryInput:checked ~ .menu-checkbox-container {
+  background-color: #f87543;
+  color: #f5f5f5;
+  border: 1px solid #f87543;
+} */
+    
+.menu-checkbox-container.checked {
+    background-color: #f87543;
+    color: #f5f5f5;
+    /* border: 1px solid #f87543; */
+    font-weight: 600;
 }

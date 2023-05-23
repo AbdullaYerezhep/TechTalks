@@ -15,10 +15,10 @@
 {{define "body"}}
 <div class="post-container">
     <div class="post">
-        <label for="post-title">Title:</label>
-        <input type="text" id="post-title" name="title"><br>
-        <label for="post-content">Content:</label>
-        <textarea id="post-content" name="content" rows="1"></textarea><br>
+        <label>Title:</label>
+        <input type="text" id="post-title" name="title">
+        <label>Content:</label>
+        <textarea id="post-content" name="content" rows="1"></textarea>
         <div id="categories">
             {{range .Categories}}
                 <div class="checkbox-container">

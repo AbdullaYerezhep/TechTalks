@@ -25,7 +25,6 @@ func (h *Handler) Router() *http.ServeMux {
 
 	fs := http.FileServer(http.Dir("./view/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-
 	mux.HandleFunc("/sign-in", h.signIn)
 	mux.HandleFunc("/sign-up", h.signUp)
 	mux.HandleFunc("/logout", h.checkAccess(h.logOut, 0))

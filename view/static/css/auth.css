@@ -125,7 +125,7 @@ label {
   color: #333;
 }
 
-input[type="text"],
+.signUpInputText,.signInInputUsername,
 input[type="password"]{
   width: 95%;
   height:25px;
@@ -136,7 +136,7 @@ input[type="password"]{
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-input[type="text"],
+.signUpInputText,.signInInputUsername,
 input[type="password"] {
   background-color: #f5f5f5;
 }
