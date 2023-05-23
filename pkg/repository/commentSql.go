@@ -37,21 +37,13 @@ func (r *CommentSQL) GetComment(id int) (models.Comment, error) {
 
 func (r *CommentSQL) GetPostComments(post_id int) ([]models.Comment, error) {
 	query := `SELECT 
-		comment.id,
-		comment.user_id,
-		comment.username,
-		comment.post_id,
-		comment.content,
-		comment.created,
-		comment.updated,
-	    COUNT(comment_rating.islike) as likes,
-	    COUNT(CASE WHEN comment_rating.islike = -1 THEN 1 END) as dislikes
-	FROM
-		comment
-	LEFT JOIN comment_rating ON comment.id = comment_rating.comment_id
-	WHERE comment.post_id = ?
-	GROUP BY comment.id, comment.user_id, comment.username, comment.post_id, comment.content, comment.created, comment.updated
-	ORDER BY comment.created ASC
+		c.*, 
+		SUM(CASE WHEN cr.islike = 1 THEN 1 ELSE 0 END) AS likes,
+		SUM(CASE WHEN cr.islike = -1 THEN 1 ELSE 0 END) AS dislikes
+  	FROM comment AS c
+  	LEFT JOIN comment_rating AS cr ON c.id = cr.comment_id
+  	WHERE c.post_id = ?
+  	GROUP BY c.id;
 	`
 	var comments []models.Comment
 	row, err := r.db.Query(query, post_id)
@@ -92,7 +84,7 @@ func (r *CommentSQL) DeleteComment(id int) error {
 func (r *CommentSQL) RateComment(rate models.RateComment) error {
 	var oldIslike int8
 
-	err := r.db.QueryRow("SELECT islike FROM comment_rating WHERE comment_id = ? AND user_id = ?", rate.Comment_ID, rate.User_ID).Scan(&oldIslike)
+	err := r.db.QueryRow("SELECT islike FROM comment_rating WHERE comment_id = ?", rate.Comment_ID).Scan(&oldIslike)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
 			return err
@@ -100,21 +92,19 @@ func (r *CommentSQL) RateComment(rate models.RateComment) error {
 	}
 
 	if oldIslike == rate.IsLike {
-		stmt, err := r.db.Prepare("DELETE FROM comment_rating WHERE comment_id = ? AND user_id = ?")
+		stmt, err := r.db.Prepare("DELETE FROM comment_rating WHERE comment_id = ?")
 		if err != nil {
 			return err
 		}
-		_, err = stmt.Exec(rate.Comment_ID, rate.User_ID)
+		_, err = stmt.Exec(rate.Comment_ID)
 		return err
 	}
 
-	stmt, err := r.db.Prepare(`
-	INSERT INTO 
+	stmt, err := r.db.Prepare(`INSERT INTO 
 		comment_rating (comment_id, user_id, islike) 
 	VALUES (?, ?, ?) 
-	ON CONFLICT(comment_id, user_id) 
-	DO UPDATE 
-		SET islike = excluded.islike`)
+	ON CONFLICT(comment_id, user_id) DO UPDATE 
+	SET islike = excluded.islike`)
 	if err != nil {
 		return err
 	}

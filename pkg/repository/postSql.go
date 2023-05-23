@@ -109,7 +109,6 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		post.TimeToStr()
 		posts = append(posts, post)
 	}
 	if err = rows.Err(); err != nil {

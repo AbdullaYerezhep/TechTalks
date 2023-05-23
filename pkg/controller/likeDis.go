@@ -11,23 +11,26 @@ func (h *Handler) ratePost(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
 		return
 	}
-
-	user_id := r.Context().Value(keyUser)
 	decoder := json.NewDecoder(r.Body)
-
 	var rate models.RatePost
-	
-	if err := decoder.Decode(&rate); err != nil {
-		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
+
+	err := decoder.Decode(&rate)
+	if err != nil {
+		h.errLog.Println(err.Error())
 		return
 	}
-	rate.User_ID = user_id.(int)
+
+	user_id := r.Context().Value(keyUser).(int)
+	rate.User_ID = user_id
 
 	if err := h.srv.Post.RatePost(rate); err != nil {
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, err.Error())
+		h.errLog.Println(err.Error())
+		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
 		return
 	}
-	
+
+	w.WriteHeader(http.StatusOK)
+
 }
 
 func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {
@@ -35,21 +38,22 @@ func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
 		return
 	}
-
-	user_id := r.Context().Value(keyUser)
 	decoder := json.NewDecoder(r.Body)
-
 	var rate models.RateComment
-	
-	if err := decoder.Decode(&rate); err != nil {
-		h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
+
+	err := decoder.Decode(&rate)
+	if err != nil {
+		h.errLog.Println(err.Error())
 		return
 	}
-	rate.User_ID = user_id.(int)
+
+	user_id := r.Context().Value(keyUser).(int)
+	rate.User_ID = user_id
 
 	if err := h.srv.Comment.RateComment(rate); err != nil {
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, err.Error())
+		h.errLog.Println(err.Error())
+		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
 		return
 	}
-
+	w.WriteHeader(http.StatusOK)
 }

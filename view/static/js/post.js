@@ -23,7 +23,7 @@ commentLikeButtons.forEach(button => {
     button.addEventListener("click", () => {
         if (isAuthenticated) {
             let body = { comment_id: +comment_id, islike: 1 }
-            let url = "/comment/rate/"
+            let url = "/comment/rate"
             submitRating(body, url)
         }else{
             signInPrompt()
@@ -36,7 +36,7 @@ commentDislikeButtons.forEach(button => {
         let comment_id = button.getAttribute("comment-id")
         button.addEventListener("click", () => {
             let body = { comment_id: +comment_id, islike: -1 }
-            let url = "/comment/rate/"
+            let url = "/comment/rate"
             submitRating(body, url)
         })
     }else{

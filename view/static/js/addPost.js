@@ -19,7 +19,7 @@ addPostButton.addEventListener("click", () =>{
     let categories = document.querySelectorAll(".categoryInput:checked");
     let categoryValues = Array.from(categories).map((category) => category.value);
     console.log(categoryValues);                    
-    let url = "/post/add/"
+    let url = "/post/add"
     let body = {
         categories: categoryValues,
         title:title,

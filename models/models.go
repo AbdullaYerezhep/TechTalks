@@ -23,19 +23,17 @@ type Category struct {
 }
 
 type Post struct {
-	ID         int      `json:"id"`
-	User_ID    int      `json:"user_id"`
-	Author     string   `json:"author"`
-	Category   []string `json:"categories"`
-	Title      string   `json:"title"`
-	Content    string   `json:"content"`
-	Created    time.Time
-	Updated    time.Time
-	Comments   int
-	Likes      int
-	Dislikes   int
-	CreatedStr string
-	UpdatedStr string
+	ID       int `json:"id"`
+	User_ID  int
+	Author   string   `json:"author"`
+	Category []string `json:"categoires"`
+	Title    string   `json:"title"`
+	Content  string   `json:"content"`
+	Created  string
+	Updated  *string
+	Comments int
+	Likes    int
+	Dislikes int
 }
 
 type PostCategory struct {
@@ -44,8 +42,8 @@ type PostCategory struct {
 }
 
 type Comment struct {
-	ID       int    `json:"id"`
-	User_ID  int    `json:"user_id"`
+	ID       int `json:"id"`
+	User_ID  int
 	Author   string `json:"username"`
 	Post_ID  int    `json:"post_id"`
 	Content  string `json:"content"`
@@ -56,14 +54,13 @@ type Comment struct {
 }
 
 type RatePost struct {
-	User_ID int  `json:"user_id"`
+	User_ID int
 	Post_ID int  `json:"post_id"`
 	IsLike  int8 `json:"islike"`
 }
 
 type RateComment struct {
-	ID         int
-	User_ID    int  `json:"user_id"`
+	User_ID    int
 	Post_ID    int  `json:"post_id"`
 	Comment_ID int  `json:"comment_id"`
 	IsLike     int8 `json:"islike"`
@@ -83,11 +80,13 @@ type AddPostPage struct {
 type PostPageData struct {
 	*User
 	Post
-	Comments []Comment
+	Comments   []Comment
 	Categories []string
 }
 
-func (p *Post) TimeToStr() {
-	p.CreatedStr = p.Created.Format("02-01-2006 15:04")
-	p.UpdatedStr = p.Updated.Format("02-01-2006 15:04")
-}
+// func (p *Post) TimeToStr() {
+// 	p.CreatedStr = p.Created.Format("02-01-2006 15:04")
+// 	if p.Updated != nil {
+// 		*p.UpdatedStr = p.Updated.Format("02-01-2006 15:04")
+// 	}
+// }
