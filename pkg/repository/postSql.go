@@ -29,7 +29,7 @@ func (r *PostSQL) CreatePost(p models.Post) error {
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(p.User_ID, p.Author, p.Title, p.Content, p.Created, p.Updated)
+	result, err := stmt.Exec(p.User_ID, p.Author, p.Title, p.Content, p.CreatedAt, p.UpdatedAt)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -65,7 +65,7 @@ func (r *PostSQL) GetPost(id int) (models.Post, error) {
 	GROUP BY post.id;
 	`
 	row := r.db.QueryRow(query, id)
-	err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.Created, &p.Updated, &p.Likes, &p.Dislikes)
+	err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes)
 	return p, err
 }
 
@@ -104,17 +104,22 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 			&post.ID,
 			&post.User_ID,
 			&post.Author,
-			&categories, // Scan as sql.NullString
 			&post.Title,
 			&post.Content,
-			&post.Created,
-			&post.Updated,
+			&post.CreatedAt,
+			&post.UpdatedAt,
 			&post.Comments,
 			&post.Likes,
 			&post.Dislikes,
+			&categories, // Scan as sql.NullString
 		)
 		if err != nil {
 			// Handle the error
+		}
+		post.Created = post.CreatedAt.Format("02-01-2006 15:04:05")
+		if post.UpdatedAt != nil {
+			uptime := post.UpdatedAt.Format("02-01-2006 15:04:05")
+			post.Updated = &uptime
 		}
 		if categories.Valid {
 			post.Category = strings.Split(categories.String, ",")

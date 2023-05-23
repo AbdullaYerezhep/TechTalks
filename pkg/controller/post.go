@@ -1,7 +1,6 @@
 package controller
 
 import (
-	
 	"forum/models"
 	"net/http"
 )
@@ -27,7 +26,6 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		user, err := h.srv.GetUserByID(id.(int))
-				
 		if err != nil {
 			h.errorMsg(w, http.StatusInternalServerError, errorTemp, err.Error())
 			return
@@ -38,7 +36,7 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 			h.errLog.Println("Context post")
 			h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
 			return
-		}		
+		}
 
 		post.User_ID = user.ID
 		post.Author = user.Name

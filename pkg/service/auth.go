@@ -3,6 +3,7 @@ package service
 import (
 	"forum/models"
 	"forum/pkg/repository"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -21,7 +22,15 @@ func (s *AuthService) CreateUser(u models.User) error {
 		return err
 	}
 	u.Password = getHash(u.Password)
-	return s.repo.CreateUser(u)
+	if err := s.repo.CreateUser(u); err != nil {
+		if strings.Contains(err.Error(), "UNIQUE") {
+			return ErrUserExists
+		} else {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (s *AuthService) GetUserByID(id int) (models.User, error) {

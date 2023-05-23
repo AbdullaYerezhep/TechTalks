@@ -28,7 +28,7 @@ func (s *PostService) CreatePost(p models.Post) error {
 	if cat != "" {
 		return fmt.Errorf("invalid category %s", cat)
 	}
-	p.Created = time.Now().Format("02-01-2006 15:04")
+	p.CreatedAt = time.Now()
 	return s.repo.CreatePost(p)
 }
 
@@ -37,7 +37,16 @@ func (s *PostService) GetCategories() ([]string, error) {
 }
 
 func (s *PostService) GetPost(id int) (models.Post, error) {
-	return s.repo.GetPost(id)
+	post, err := s.repo.GetPost(id)
+	if err != nil {
+		return models.Post{}, err
+	}
+	post.Created = post.CreatedAt.Format("2006-01-02 15:04:05")
+	if post.UpdatedAt != nil {
+		uptime := post.UpdatedAt.Format("2006-01-02 15:04:05")
+		post.Updated = &uptime
+	}
+	return post, nil
 }
 
 func (s *PostService) GetAllPosts() ([]models.Post, error) {
@@ -56,8 +65,8 @@ func (s *PostService) UpdatePost(user_id int, updatedPost models.Post) error {
 
 	post.Title = updatedPost.Title
 	post.Content = updatedPost.Content
-	now := time.Now().Format("02-01-2006 15:04")
-	post.Updated = &now
+	now := time.Now()
+	post.UpdatedAt = &now
 
 	return s.repo.UpdatePost(post)
 }

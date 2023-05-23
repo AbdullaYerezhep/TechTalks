@@ -40,9 +40,10 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 
 		if err := h.srv.CreateUser(user); err != nil {
 			h.errLog.Println(err.Error())
-			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+			w.Header().Set("Error-msg", err.Error())
 			return
 		}
+		http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
 
 	default:
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
@@ -62,6 +63,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
+			h.errLog.Println(err.Error())
 			h.errorMsg(w, http.StatusBadRequest, "error", "")
 			return
 		}
@@ -70,6 +72,8 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 
 		user, err := h.srv.GetUser(name, password)
 		if err != nil {
+			h.errLog.Println(err.Error())
+			w.Header().Set("Error-msg", err.Error())
 			h.errorMsg(w, http.StatusBadRequest, "sign-in", "User not found!")
 			return
 		}

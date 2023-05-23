@@ -12,7 +12,7 @@ PRAGMA foreign_keys = ON;
 -- DROP TABLE IF EXISTS `comment`;
 
 -- DROP TABLE IF EXISTS `post_rating`;
-DROP TABLE IF EXISTS `comment_rating`;
+-- DROP TABLE IF EXISTS `comment_rating`;
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS post (
     author VARCHAR NOT NULL,
     title VARCHAR NOT NULL,
     content TEXT NOT NULL,
-    created DATETIME,
+    created DATETIME NOT NULL,
     updated DATETIME
 );
 
