@@ -37,10 +37,10 @@
                         <div class="post-category">{{.}}</div>
                     {{end}}
                 </div>
-                <div class="post-author">Posted by: {{.Author}} at {{.CreatedStr}}</div>
+                <div class="post-author">Posted by: {{.Author}} at {{.Created}}</div>
                 <div class="post-title">{{ .Title }}</div>
                 <div class="post-text"><p>{{.Content}}</p></div>
-                <div class="post-update">Last update: {{.UpdatedStr}}</div>
+                <div class="post-update">Last update: {{.Updated}}</div>
                 <div class="post-comments">
                 <a href="/post/comments/?id={{.ID}}">{{template "comments" .}}</a>
                 </div>
