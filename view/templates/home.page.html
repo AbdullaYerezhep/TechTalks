@@ -42,6 +42,7 @@
                 <div class="post-text"><p>{{.Content}}</p></div>
                 <div class="post-update">Last update: {{.Updated}}</div>
                 <div class="post-comments">
+                    <div class="comments">{{.Comments}}</div>
                 <a href="/post/comments/?id={{.ID}}">{{template "comments" .}}</a>
                 </div>
             </div>

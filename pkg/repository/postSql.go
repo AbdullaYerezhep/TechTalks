@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"forum/models"
+	"strings"
 )
 
 type PostSQL struct {
@@ -94,6 +95,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 	posts := []models.Post{}
 	for rows.Next() {
 		var post models.Post
+		var categories sql.NullString // Use sql.NullString instead of string
 		err = rows.Scan(
 			&post.ID,
 			&post.User_ID,
@@ -105,9 +107,15 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 			&post.Comments,
 			&post.Likes,
 			&post.Dislikes,
+			&categories, // Scan as sql.NullString
 		)
 		if err != nil {
-			return nil, err
+			// Handle the error
+		}
+		if categories.Valid {
+			post.Category = strings.Split(categories.String, ",")
+		} else {
+			post.Category = []string{} // Set an empty slice for NULL values
 		}
 		posts = append(posts, post)
 	}
