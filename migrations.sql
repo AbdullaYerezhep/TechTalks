@@ -12,6 +12,7 @@ PRAGMA foreign_keys = ON;
 -- DROP TABLE IF EXISTS `comment`;
 
 -- DROP TABLE IF EXISTS `post_rating`;
+DROP TABLE IF EXISTS `comment_rating`;
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
@@ -74,7 +75,8 @@ CREATE TABLE IF NOT EXISTS post_rating (
 
 
 CREATE TABLE IF NOT EXISTS comment_rating (
-    comment_id INTEGER PRIMARY KEY,
+    comment_id INTEGER NOT NULL REFERENCES comment(id) ON DELETE CASCADE,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    islike INTEGER CHECK (islike IN (-1, 1))
+    islike INTEGER CHECK (islike IN (-1, 1)),
+    PRIMARY KEY (comment_id, user_id)
 );
