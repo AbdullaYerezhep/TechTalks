@@ -186,3 +186,83 @@ func (r *PostSQL) LikeDis(rate models.RatePost) error {
 // 	}
 // 	return posts, err
 // }
+
+/*
+func (r repo) GetTopPostsByLikes() ([]entity.Post, error) {
+	query := `
+	SELECT p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at,
+    COUNT(CASE WHEN e.likes = 1 THEN e.id END) AS likes_count,
+    COUNT(CASE WHEN e.dislikes = 1 THEN e.id END) AS dislikes_count
+	FROM posts p
+
+	LEFT JOIN emotions e ON p.id = e.post_id
+
+    GROUP BY p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at
+	ORDER BY  likes_count DESC
+	`
+	rows, err := r.db.Query(query)
+	if err != nil {
+		r.log.Printf("error while to query Get Top Posts By Likes: %s\n", err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	posts := []entity.Post{}
+	for rows.Next() {
+		var post entity.Post
+		err := rows.Scan(&post.Id, &post.Title, &post.Content, &post.UserId, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes)
+		if err != nil {
+			r.log.Printf("error while to scan Get Top Posts By Likes: %s\n", err.Error())
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	if err := rows.Err(); err != nil {
+		r.log.Println(err)
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+// получить 10 постов из базы данных с наибольшим количеством лайков
+func (r repo) GetTopPostsByCategoryLikes(category string) ([]entity.Post, error) {
+	query := `
+	SELECT p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at,
+    COUNT(CASE WHEN e.likes = 1 THEN e.id END) AS likes_count,
+    COUNT(CASE WHEN e.dislikes = 1 THEN e.id END) AS dislikes_count
+	FROM posts p
+	LEFT JOIN category c ON p.id = c.post_id
+	LEFT JOIN emotions e ON p.id = e.post_id
+	WHERE c.name=?
+    GROUP BY p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at, c.name
+	ORDER BY likes_count DESC
+	`
+	rows, err := r.db.Query(query, category)
+	if err != nil {
+		r.log.Printf("error while to query Get Top Posts By Likes: %s\n", err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	posts := []entity.Post{}
+	for rows.Next() {
+		var post entity.Post
+		err := rows.Scan(&post.Id, &post.Title, &post.Content, &post.UserId, &post.CreatedAt, &post.UpdatedAt, &post.Likes, &post.Dislikes)
+		if err != nil {
+			r.log.Printf("error while to scan Get Top Posts By Likes: %s\n", err.Error())
+			return nil, err
+		}
+		post.Category = append(post.Category, category)
+		posts = append(posts, post)
+	}
+
+	if err := rows.Err(); err != nil {
+		r.log.Println(err)
+		return nil, err
+	}
+
+	return posts, nil
+}
+*/
