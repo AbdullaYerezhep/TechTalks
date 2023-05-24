@@ -58,7 +58,9 @@
             <div class="single-post-author"> Posted by: {{.Post.Author}} at {{.Post.Created}}</div>
             <div class="single-post-title">{{.Post.Title }}</div>
             <div class="single-post-content"><p>{{.Post.Content}}</p></div>
+            {{if .Updated}}
             <div class="single-post-update">Last update: {{.Post.Updated}}</div>
+            {{end}}
         </div>
     </div>
     <div class="add-comment">
