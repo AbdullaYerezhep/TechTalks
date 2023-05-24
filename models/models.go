@@ -24,7 +24,7 @@ type Category struct {
 
 type Post struct {
 	ID       int `json:"id"`
-	User_ID  int
+	User_ID  int	
 	Author   string   `json:"author"`
 	Category []string `json:"categoires"`
 	Title    string   `json:"title"`

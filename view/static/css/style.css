@@ -96,15 +96,8 @@ a {
   background-color: #333333;
 }
 
-.error {
-  color: red;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
 .rate_button {
   max-width: 20px;
-
 }
 
 .hidden {

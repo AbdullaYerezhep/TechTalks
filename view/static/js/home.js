@@ -16,6 +16,7 @@ function openPost(post) {
 
 // my posts logic
 console.log(isAuthenticated);
+
 if (isAuthenticated){
     const myPostsButton = document.querySelector(".headerMyPosts")
     

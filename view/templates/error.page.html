@@ -5,13 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/error.css">
     <link rel="shortcut icon" href="/static/images/error.svg" type="image/x-icon">
     <title>{{.Status}}</title>
 </head>
 <body>
-    <a href="/">Return to the Main Page</a>
-    <hr>
-    {{.CustomText}}
-    <hr>
+    <header class="header">
+        <a class="logo" href="/">
+            <img class="logo-img" src="/static/images/logo.jpeg" alt="logo">
+            <p class="logo-text">TECH talks</p> 
+        </a>
+   </header>
+   <div class="main">
+       <div class="error-container">
+           <h1 class="error-message">
+                {{.Status}}
+                {{.CustomText}}
+                {{.StatusText}}
+            <h1>
+            <a class="error-button" href="/">Return</a>
+        </div>
+   </div>
 </body>
 </html>

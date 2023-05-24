@@ -17,17 +17,28 @@
 {{define "body"}}
 <div id="overlay"></div>
 <div id="post_id" hidden>{{.Post.ID}}</div>
+<div id="post_user_id" hidden>{{.Post.User_ID}}</div>   
 <div id="user_id" user-id={{if .User}}{{.User.ID}}{{end}} hidden></div>
 <div class="single-post-container">
     <div class="single-post-actions">
         {{if .User}}
             {{if eq .User.ID .Post.User_ID}}
-                <a href="/post/update/?id={{.Post.ID}}">
+            <div id="edit-container">
+                <span id="update-post">
                     {{template "update" .}}
-                </a>
-                <a href="/post/delete/?id={{.Post.ID}}">
+                </span>
+                <span id="delete-post">
                     {{template "delete" .}}
-                </a>
+                </span>
+            </div>
+            <div id="decision-container" class="hidden">
+                <span id="submit-update-post">
+                    ✔️
+                </span>
+                <span id="discard-update-post">
+                    X
+                </span>
+            </div>
             {{end}}
         {{end}}
     </div>
@@ -59,6 +70,20 @@
             <div class="single-post-title">{{.Post.Title }}</div>
             <div class="single-post-content"><p>{{.Post.Content}}</p></div>
             <div class="single-post-update">Last update: {{.Post.Updated}}</div>
+        </div>
+        <div id="edit-single-content" class="hidden">
+            <label>Title:</label>
+            <input type="text" id="edit-post-title">
+            <label>Content:</label>
+            <textarea id="edit-post-content"></textarea>
+            <!-- <div id="categories">
+                {{range .Categories}}
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="edit-post-categoryInput" name="category[]" value="{{.}}">
+                        <label class="checkmark" for="category-{{.}}">{{.}}</label>
+                    </div>
+                {{end}}
+            </div> -->
         </div>
     </div>
     <div class="add-comment">

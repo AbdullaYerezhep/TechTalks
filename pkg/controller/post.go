@@ -71,6 +71,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.srv.UpdatePost(user_id.(int), updatedPost); err != nil {
+		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
 		return
 	}
