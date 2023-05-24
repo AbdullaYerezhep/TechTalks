@@ -33,12 +33,32 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		Password: r.FormValue("password"),
 	}
 
-	if err := h.srv.CreateUser(user); err != nil {
+	user_id, err := h.srv.CreateUser(user)
+	if err != nil {
 		h.errLog.Println(err.Error())
-		w.Header().Set("Error-msg", err.Error())
+		h.errorMsg(w, http.StatusBadRequest, errorTemp, err.Error())
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	s := newSession(user_id)
+	err = h.srv.CreateSession(s)
+
+	if err != nil {
+		h.errLog.Println(err.Error())
+		h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		return
+	}
+
+	c := &http.Cookie{
+		Name:    "token",
+		Value:   s.Token,
+		Expires: time.Now().Add(1 * time.Hour),
+	}
+
+	http.SetCookie(w, c)
+
+	referer := w.Header().Get("Referer")
+	http.Redirect(w, r, referer, http.StatusSeeOther)
 	return
 }
 
@@ -59,13 +79,13 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	user, err := h.srv.GetUser(name, password)
 	if err != nil {
 		h.errLog.Println(err.Error())
-		w.Header().Set("Error-msg", err.Error())
+		h.errorMsg(w, http.StatusNotFound, errorTemp, "User not found")
+		// w.Header().Set("Error-msg", err.Error())
 		return
 	}
 
 	s := newSession(user.ID)
 	err = h.srv.CreateSession(s)
-
 	if err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusInternalServerError, "error", "")

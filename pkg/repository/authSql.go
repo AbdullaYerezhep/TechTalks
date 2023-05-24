@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/models"
 )
 
@@ -15,13 +16,20 @@ func NewAuthSQL(db *sql.DB) *AuthSQL {
 	}
 }
 
-func (r *AuthSQL) CreateUser(u models.User) error {
+func (r *AuthSQL) CreateUser(u models.User) (int, error) {
 	statement, err := r.db.Prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)")
 	if err != nil {
-		return err
+		return 0, fmt.Errorf("failed to prepare statement: %v", err)
 	}
-	_, err = statement.Exec(u.Name, u.Email, u.Password)
-	return err
+	res, err := statement.Exec(u.Name, u.Email, u.Password)
+	if err != nil {
+		return 0, fmt.Errorf("failed to insert post: %v", err)
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("failed to retrieve last insert ID: %v", err)
+	}
+	return int(id), nil
 }
 
 func (r *AuthSQL) GetUser(name string) (models.User, error) {

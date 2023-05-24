@@ -6,7 +6,7 @@ import (
 )
 
 type Authorization interface {
-	CreateUser(user models.User) error
+	CreateUser(user models.User) (int, error)
 	GetUser(name, password string) (models.User, error)
 	GetUserByID(id int) (models.User, error)
 }
@@ -21,6 +21,7 @@ type Post interface {
 	CreatePost(p models.Post) error
 	GetPost(id int) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
+	GetTopPostsByLikes() ([]models.Post, error)
 	UpdatePost(user_id int, p models.Post) error
 	DeletePost(user_id, post_id int) error
 	GetCategories() ([]string, error)

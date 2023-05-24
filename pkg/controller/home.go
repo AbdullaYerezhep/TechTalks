@@ -40,6 +40,39 @@ func (h *Handler) home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h *Handler) homeFilteredByLikes(w http.ResponseWriter, r *http.Request) {
+	var data models.HomePage
+	id := r.Context().Value(keyUser)
+	if id != nil {
+		user, err := h.srv.GetUserByID(id.(int))
+		if err != nil {
+			h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+			return
+		}
+		data.User = user
+	}
+
+	posts, err := h.srv.GetTopPostsByLikes()
+	if err != nil {
+		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+		return
+	}
+
+	data.Posts = posts
+
+	categories, err := h.srv.GetCategories()
+	if err != nil {
+		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+		return
+	}
+	data.Categories = categories
+
+	if err = templates["home"].Execute(w, data); err != nil {
+		h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+		return
+	}
+}
+
 func (h *Handler) postDetails(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "Method error")

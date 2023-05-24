@@ -23,19 +23,6 @@ type Category struct {
 }
 
 type Post struct {
-<<<<<<< HEAD
-	ID       int `json:"id"`
-	User_ID  int	
-	Author   string   `json:"author"`
-	Category []string `json:"categoires"`
-	Title    string   `json:"title"`
-	Content  string   `json:"content"`
-	Created  string
-	Updated  *string
-	Comments int
-	Likes    int
-	Dislikes int
-=======
 	ID        int `json:"id"`
 	User_ID   int
 	Author    string   `json:"author"`
@@ -49,7 +36,6 @@ type Post struct {
 	Dislikes  int
 	Created   string
 	Updated   *string
->>>>>>> master
 }
 
 type PostCategory struct {
@@ -106,3 +92,15 @@ type PostPageData struct {
 // 		*p.UpdatedStr = p.Updated.Format("02-01-2006 15:04")
 // 	}
 // }
+// ID        int `json:"id"`
+// User_ID   int
+// Author    string   `json:"author"`
+// Category  []string `json:"categories"`
+// Title     string   `json:"title"`
+// Content   string   `json:"content"`
+// CreatedAt time.Time
+// UpdatedAt *time.Time
+// Comments  int
+// Likes     int
+// Dislikes  int
+// Cre

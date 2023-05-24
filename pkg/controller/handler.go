@@ -48,6 +48,7 @@ func (h *Handler) Router() *http.ServeMux {
 	mux.HandleFunc("/sign-up", h.signUp)
 	mux.HandleFunc("/logout", h.checkAccess(h.logOut, 0))
 	mux.HandleFunc("/", h.checkAccess(h.home, 0))
+	mux.HandleFunc("/popular", h.checkAccess(h.homeFilteredByLikes, 0))
 	mux.HandleFunc("/post/", h.checkAccess(h.postDetails, 0))
 	mux.HandleFunc("/post/add", h.decodeRequest(h.checkAccess(h.addPost, 1)))
 	mux.HandleFunc("/post/edit", h.decodeRequest(h.checkAccess(h.updatePost, 1)))

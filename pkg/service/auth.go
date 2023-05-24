@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"forum/models"
 	"forum/pkg/repository"
 	"strings"
@@ -17,20 +18,22 @@ func NewAuth(repo repository.Authorization) *AuthService {
 }
 
 // New user actions
-func (s *AuthService) CreateUser(u models.User) error {
+func (s *AuthService) CreateUser(u models.User) (int, error) {
 	if err := validateNewUserData(u); err != nil {
-		return err
+		return 0, fmt.Errorf("failed to insert post: %v", err)
 	}
 	u.Password = getHash(u.Password)
-	if err := s.repo.CreateUser(u); err != nil {
+
+	id, err := s.repo.CreateUser(u)
+	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE") {
-			return ErrUserExists
+			return 0, fmt.Errorf("Error creating user: %v", ErrUserExists)
 		} else {
-			return err
+			return 0, fmt.Errorf("Error creating user: %v", err)
 		}
 	}
 
-	return nil
+	return id, nil
 }
 
 func (s *AuthService) GetUserByID(id int) (models.User, error) {

@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"forum/models"
 	"strings"
 )
@@ -55,18 +56,27 @@ func (r *PostSQL) GetPost(id int) (models.Post, error) {
 	query := `
 	SELECT post.*,
 		COUNT(CASE WHEN post_rating.islike = 1 THEN 1 END) AS likes, 
-		COUNT(CASE WHEN post_rating.islike = -1 THEN 1 END) AS dislikes
-	FROM 
-		post 
-	LEFT JOIN 
-		post_rating ON post.id = post_rating.post_id 
+		COUNT(CASE WHEN post_rating.islike = -1 THEN 1 END) AS dislikes,
+		GROUP_CONCAT(DISTINCT category.name) AS categories
+	FROM post 
+	LEFT JOIN post_rating ON post.id = post_rating.post_id
+	LEFT JOIN post_category AS pc ON post.id = pc.post_id
+	LEFT JOIN category ON pc.category_name = category.name
 	WHERE
 		post.id = ?
 	GROUP BY post.id;
 	`
 	row := r.db.QueryRow(query, id)
-	err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes)
-	return p, err
+	var categories sql.NullString
+	if err := row.Scan(&p.ID, &p.User_ID, &p.Author, &p.Title, &p.Content, &p.CreatedAt, &p.UpdatedAt, &p.Likes, &p.Dislikes, &categories); err != nil {
+		return models.Post{}, fmt.Errorf("Error scanning Post Details: %v", err)
+	}
+	if categories.Valid {
+		p.Category = strings.Split(categories.String, ",")
+	} else {
+		p.Category = []string{}
+	}
+	return p, nil
 }
 
 // Get all posts with their categories and number of likes, dislikes and comments.
@@ -81,7 +91,8 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 	LEFT JOIN post_rating AS pr ON post.id = pr.post_id
 	LEFT JOIN post_category AS pc ON post.id = pc.post_id
 	LEFT JOIN category ON pc.category_name = category.name
-	GROUP BY post.id;
+	GROUP BY post.id
+	ORDER BY post.created DESC;
 	`
 
 	rows, err := r.db.Query(query)
@@ -107,7 +118,7 @@ func (r *PostSQL) GetAllPosts() ([]models.Post, error) {
 			&categories, // Scan as sql.NullString
 		)
 		if err != nil {
-			// Handle the error
+			return nil, err
 		}
 		post.Created = post.CreatedAt.Format("02-01-2006 15:04:05")
 		if post.UpdatedAt != nil {
@@ -173,6 +184,64 @@ func (r *PostSQL) LikeDis(rate models.RatePost) error {
 	}
 	_, err = stmt.Exec(rate.User_ID, rate.Post_ID, rate.IsLike)
 	return err
+}
+
+func (r *PostSQL) GetTopPostsByLikes() ([]models.Post, error) {
+	query := `
+	SELECT post.*,
+    COUNT(DISTINCT comment.id) AS comment_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count,
+	    GROUP_CONCAT(DISTINCT category.name) AS categories
+	FROM post
+	LEFT JOIN comment ON post.id = comment.post_id
+	LEFT JOIN post_rating AS pr ON post.id = pr.post_id
+	LEFT JOIN post_category AS pc ON post.id = pc.post_id
+	LEFT JOIN category ON pc.category_name = category.name
+	GROUP BY post.id
+	ORDER by like_count DESC;
+	`
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	posts := []models.Post{}
+	for rows.Next() {
+		var post models.Post
+		var categories sql.NullString // Use sql.NullString instead of string
+		err = rows.Scan(
+			&post.ID,
+			&post.User_ID,
+			&post.Author,
+			&post.Title,
+			&post.Content,
+			&post.CreatedAt,
+			&post.UpdatedAt,
+			&post.Comments,
+			&post.Likes,
+			&post.Dislikes,
+			&categories, // Scan as sql.NullString
+		)
+		if err != nil {
+			return nil, err
+		}
+		post.Created = post.CreatedAt.Format("02-01-2006 15:04:05")
+		if post.UpdatedAt != nil {
+			uptime := post.UpdatedAt.Format("02-01-2006 15:04:05")
+			post.Updated = &uptime
+		}
+		if categories.Valid {
+			post.Category = strings.Split(categories.String, ",")
+		} else {
+			post.Category = []string{} // Set an empty slice for NULL values
+		}
+		posts = append(posts, post)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return posts, nil
 }
 
 // func (r *PostSQL) GetPostsByCategory(category string) ([]models.Post, error) {
