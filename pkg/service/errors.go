@@ -10,6 +10,7 @@ var (
 	ErrAscii           = errors.New("non-ascii character")
 	ErrUserNotFound    = errors.New("user not found")
 	ErrWrongPassword   = errors.New("wrong password")
+	ErrUserExists      = errors.New("username or password already exists")
 	// post action errors
 	// comment action errors
 	ErrPermission = errors.New("permission denied")

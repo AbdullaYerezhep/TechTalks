@@ -23,6 +23,7 @@ type Category struct {
 }
 
 type Post struct {
+<<<<<<< HEAD
 	ID       int `json:"id"`
 	User_ID  int	
 	Author   string   `json:"author"`
@@ -34,6 +35,21 @@ type Post struct {
 	Comments int
 	Likes    int
 	Dislikes int
+=======
+	ID        int `json:"id"`
+	User_ID   int
+	Author    string   `json:"author"`
+	Category  []string `json:"categories"`
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	CreatedAt time.Time
+	UpdatedAt *time.Time
+	Comments  int
+	Likes     int
+	Dislikes  int
+	Created   string
+	Updated   *string
+>>>>>>> master
 }
 
 type PostCategory struct {

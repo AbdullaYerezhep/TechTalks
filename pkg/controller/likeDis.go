@@ -30,7 +30,6 @@ func (h *Handler) ratePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-
 }
 
 func (h *Handler) rateComment(w http.ResponseWriter, r *http.Request) {
