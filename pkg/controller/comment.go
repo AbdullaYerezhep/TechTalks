@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"forum/models"
+	"forum/models"	
 	"net/http"
 )
 

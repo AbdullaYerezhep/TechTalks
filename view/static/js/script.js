@@ -4,7 +4,7 @@ function editComment(id) {
 }
 
 let userID = document.getElementById("user_id").getAttribute("user-id");
-const isAuthenticated = userID !== null && userID !== "";
+const isAuthenticated = userID !== null && userID !== "" && userID !== "0";
 
 let postLikeButtons = document.querySelectorAll(".post-likeBtn")
 let postDislikeButtons = document.querySelectorAll(".post-dislikeBtn")

@@ -15,35 +15,59 @@ function openPost(post) {
 
 
 // my posts logic
+console.log(isAuthenticated);
 
-const myPostsButton = document.querySelector(".headerMyPosts")
-
-myPostsButton.addEventListener("click", () => {
-    filterMyPosts()
-})
-
-const filterMyPosts = () => {
-
+if (isAuthenticated){
+    const myPostsButton = document.querySelector(".headerMyPosts")
+    
+    myPostsButton.addEventListener("click", () => {
+        filterMyPosts()
+    })
+    
+    const filterMyPosts = () => {
+        posts.forEach(post => {
+            let authorID = post.querySelector(".author-id").getAttribute("author");
+            if (authorID !== userID) {
+                post.style.display = "none"
+            }else{
+                post.style.display = "flex"
+            }
+        })
+        
+    }
 }
 
 // categories filter 
 
-let checkBoxContainers = document.querySelectorAll(".menu-checkbox-container")
+let checkBoxContainers = document.querySelectorAll(".menu-checkbox-container");
 
 checkBoxContainers.forEach(checkBoxContainer => {
-    checkBoxContainer.addEventListener("click", ()=>{
-        let checkBoxInput = checkBoxContainer.querySelector(".menuCategoryInput")
-        checkBoxInput.checked = !checkBoxInput.checked
-        checkBoxContainer.classList.toggle('checked');
-    })
+  checkBoxContainer.addEventListener("click", () => {
+    const checkBoxInput = checkBoxContainer.querySelector(".menuCategoryInput")
+    checkBoxContainer.classList.toggle('checked');
+    checkBoxInput.checked = !checkBoxInput.checked
+    filterByCategory();
+  });
 });
 
-// function checkBox(container) {
-//     let checkBoxInput = container.querySelector(".menuCategoryInput")
-//     checkBoxInput.checked = !checkBoxInput.checked
-//     checkBoxContainer.classList.toggle('checked');
-// }
-
 const filterByCategory = () => {
+  let checkedCategories = [];
+  let checkedCheckboxes = document.querySelectorAll(".menuCategoryInput:checked");
+  
+  checkedCheckboxes.forEach(checkbox => {
+    let category = checkbox.value;
+    checkedCategories.push(category);
+  });
+  
+  
+  posts.forEach(post => {
+    let postCategories = Array.from(post.querySelectorAll(".post-category"))
+    let filteredPosts = postCategories.map(category => category.textContent);
     
-}
+    if (checkedCategories.length === 0 || checkedCategories.every(category => filteredPosts.includes(category))) {
+      post.style.display = "flex";
+    } else {
+      post.style.display = "none";
+    }
+  });
+};

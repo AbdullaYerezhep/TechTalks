@@ -42,7 +42,6 @@ func New(info, err *log.Logger, srv *service.Service) *Handler {
 
 func (h *Handler) Router() *http.ServeMux {
 	mux := http.NewServeMux()
-
 	fs := http.FileServer(http.Dir("./view/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/sign-in", h.signIn)
