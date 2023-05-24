@@ -62,7 +62,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Error-msg", err.Error())
 		return
 	}
-
+	
 	s := newSession(user.ID)
 	err = h.srv.CreateSession(s)
 

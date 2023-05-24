@@ -76,14 +76,6 @@
             <input type="text" id="edit-post-title">
             <label>Content:</label>
             <textarea id="edit-post-content"></textarea>
-            <!-- <div id="categories">
-                {{range .Categories}}
-                    <div class="checkbox-container">
-                        <input type="checkbox" class="edit-post-categoryInput" name="category[]" value="{{.}}">
-                        <label class="checkmark" for="category-{{.}}">{{.}}</label>
-                    </div>
-                {{end}}
-            </div> -->
         </div>
     </div>
     <div class="add-comment">
@@ -103,6 +95,7 @@
             <div class="comments">
                 {{range .Comments}}
                     {{if eq $.User.ID .User_ID}}
+                        <div class="comment-author">{{.User_ID}}</div>
                         <div class="my-comment">
                             <div class="my-comment-body">
                                 <div class="my-comment-author">
@@ -131,6 +124,7 @@
                             </div>
                         </div>
                     {{else}}
+                        <div class="comment-author">{{.User_ID}}</div>
                         <div class="else-comment">
                             <div class="else-comment-body">
                                 <div class="else-comment-author">

@@ -8,6 +8,13 @@ let addCommentSubmitButton = document.getElementById("addCommentSubmitBtn")
 let commentLikeButtons = document.querySelectorAll(".comment-likeBtn")
 let commentDislikeButtons = document.querySelectorAll(".comment-dislikeBtn")
 
+let commentEditButtons = document.querySelectorAll(".edit-comment")
+let commentDeleterButtons = document.querySelectorAll(".delete-comment")
+
+let commentAuthors = document.querySelectorAll(".comment-author").innerText
+let commentAuthorIDs = Array.from(commentAuthors)
+let hasMyComments = commentAuthorIDs.some(comment => commentAuthorIDs.includes(userID))
+
 let postContent = document.querySelector(".single-post-content")
 let editPostContent = document.getElementById("edit-single-content")
 
