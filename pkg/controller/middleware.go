@@ -30,9 +30,12 @@ const (
 func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("token")
-		if err != nil {
+		if err == http.ErrNoCookie {
 			if mode == defaultMode {
 				next.ServeHTTP(w, r)
+				return
+			} else {
+				h.errLog.Println(err.Error())
 				return
 			}
 			w.WriteHeader(http.StatusUnauthorized)
@@ -54,8 +57,8 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 		if session.Expiration_date.Before(time.Now()) {
 			err = h.srv.Session.DeleteSession(session.UserId)
 			if err != nil {
-
-				h.errorMsg(w, http.StatusInternalServerError, "error", err.Error())
+				h.errLog.Println(err.Error())
+				h.errorMsg(w, http.StatusInternalServerError, "")
 				return
 			}
 			if mode == defaultMode {
@@ -67,6 +70,7 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 		}
 		ctx := context.WithValue(r.Context(), keyUser, session.UserId)
 		next.ServeHTTP(w, r.WithContext(ctx))
+		return
 	})
 }
 
@@ -85,45 +89,24 @@ func (h *Handler) decodeRequest(next http.HandlerFunc) http.HandlerFunc {
 		if strings.HasPrefix(r.URL.Path, "/post") {
 			if err := decoder.Decode(&post); err != nil {
 				h.errLog.Println(err)
-				h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+				h.errorMsg(w, http.StatusBadRequest, "")
 				return
 			}
-
 			ctx = context.WithValue(r.Context(), keyRequest, post)
 
 		} else if strings.HasPrefix(r.URL.Path, "/comment") {
 			if err := decoder.Decode(&com); err != nil {
 				h.errLog.Println(err)
-				h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+				h.errorMsg(w, http.StatusBadRequest, "")
 				return
 			}
-
 			ctx = context.WithValue(r.Context(), keyRequest, com)
+
 		} else {
 			next.ServeHTTP(w, r)
+			return
 		}
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
-
-// func (h *Handler) decodeComment(next http.HandlerFunc) http.HandlerFunc {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		if r.Method == http.MethodGet {
-// 			next.ServeHTTP(w, r)
-// 			return
-// 		}
-// 		decoder := json.NewDecoder(r.Body)
-
-// 		var com models.Comment
-
-// 		if err := decoder.Decode(&com); err != nil {
-// 			h.errLog.Println(err.Error())
-// 			h.errorMsg(w, http.StatusBadRequest, "error", "Bad Request Body")
-// 			return
-// 		}
-
-// 		ctx := context.WithValue(r.Context(), keyComment, com)
-// 		next.ServeHTTP(w, r.WithContext(ctx))
-// 	})
-// }

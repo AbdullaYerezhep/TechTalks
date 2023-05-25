@@ -11,7 +11,7 @@ type CustomError struct {
 	CustomText string
 }
 
-func (h *Handler) errorMsg(w http.ResponseWriter, status int, tmpl, msg string) {
+func (h *Handler) errorMsg(w http.ResponseWriter, status int, msg string) {
 	e := CustomError{
 		Status:     status,
 		StatusText: http.StatusText(status),

@@ -22,6 +22,7 @@ type Post interface {
 	GetPost(id int) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
 	GetTopPostsByLikes() ([]models.Post, error)
+	GetMyPosts(user_id int) ([]models.Post, error)
 	UpdatePost(p models.Post) error
 	DeletePost(user_id, post_id int) error
 	LikeDis(models.RatePost) error

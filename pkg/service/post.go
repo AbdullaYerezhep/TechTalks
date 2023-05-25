@@ -57,6 +57,10 @@ func (s *PostService) GetTopPostsByLikes() ([]models.Post, error) {
 	return s.repo.GetTopPostsByLikes()
 }
 
+func (s *PostService) GetMyPosts(user_id int) ([]models.Post, error) {
+	return s.repo.GetMyPosts(user_id)
+}
+
 func (s *PostService) UpdatePost(user_id int, updatedPost models.Post) error {
 	post, err := s.repo.GetPost(updatedPost.ID)
 	if err != nil {

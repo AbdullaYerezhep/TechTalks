@@ -6,6 +6,11 @@ import (
 )
 
 func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/post/add" {
+		h.errorMsg(w, http.StatusNotFound, "")
+		return
+	}
+
 	id := r.Context().Value(keyUser)
 
 	switch r.Method {
@@ -20,21 +25,24 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err := templates["addpost"].Execute(w, addPost); err != nil {
-			h.errorMsg(w, http.StatusInternalServerError, errorTemp, err.Error())
+			h.errLog.Println(err.Error())
+			h.errorMsg(w, http.StatusInternalServerError, "")
 			return
 		}
 
 	case http.MethodPost:
+
 		user, err := h.srv.GetUserByID(id.(int))
 		if err != nil {
-			h.errorMsg(w, http.StatusInternalServerError, errorTemp, err.Error())
+			h.errLog.Println(err.Error())
+			h.errorMsg(w, http.StatusInternalServerError, "")
 			return
 		}
 
 		post, ok := r.Context().Value(keyRequest).(models.Post)
 		if !ok {
 			h.errLog.Println("Context post")
-			h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+			h.errorMsg(w, http.StatusInternalServerError, "")
 			return
 		}
 
@@ -42,21 +50,25 @@ func (h *Handler) addPost(w http.ResponseWriter, r *http.Request) {
 		post.Author = user.Name
 
 		if err = h.srv.CreatePost(post); err != nil {
-			h.errorMsg(w, http.StatusInternalServerError, errorTemp, err.Error())
+			h.errLog.Println(err.Error())
+			h.errorMsg(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
 		w.WriteHeader(http.StatusOK)
 
 	default:
-		h.errorMsg(w, http.StatusMethodNotAllowed, errorTemp, "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
 	}
 }
 
 func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
-		h.errorMsg(w, http.StatusMethodNotAllowed, errorTemp, "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
+		return
+	} else if r.URL.Path != "/post/edit" {
+		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
 
@@ -64,13 +76,13 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	updatedPost, ok := r.Context().Value(keyRequest).(models.Post)
 	if !ok {
 		h.errLog.Println("Context post")
-		h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
 
 	if err := h.srv.UpdatePost(user_id.(int), updatedPost); err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, "")
+		h.errorMsg(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -79,7 +91,10 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
-		h.errorMsg(w, http.StatusMethodNotAllowed, errorTemp, "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
+		return
+	} else if r.URL.Path != "/post/delete" {
+		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
 
@@ -87,12 +102,13 @@ func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 	post, ok := r.Context().Value(keyRequest).(models.Post)
 	if !ok {
 		h.errLog.Println("Context post")
-		h.errorMsg(w, http.StatusInternalServerError, errorTemp, "")
+		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
 
 	if err := h.srv.DeletePost(user_id.(int), post.ID); err != nil {
-		h.errorMsg(w, http.StatusNotFound, errorTemp, err.Error())
+		h.errLog.Println(err.Error())
+		h.errorMsg(w, http.StatusNotFound, err.Error())
 		return
 	}
 

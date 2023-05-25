@@ -55,3 +55,19 @@ func isValidPassword(password string) error {
 
 	return err
 }
+
+func isValidPostContent(p *models.Post) error {
+	if len([]rune(p.Content)) < 10 && len([]rune(p.Content)) > 1000 {
+		return ErrPostContent
+	} else if len([]rune(p.Title)) < 5 && len([]rune(p.Title)) > 40 {
+		return ErrPostTitle
+	}
+	return nil
+}
+
+func isValidCommentContent(p *models.Comment) error {
+	if len([]rune(p.Content)) < 1 && len([]rune(p.Content)) > 100 {
+		return ErrCommentContent
+	}
+	return nil
+}

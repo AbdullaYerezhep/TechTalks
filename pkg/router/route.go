@@ -2,7 +2,7 @@ package router
 
 // var (
 // 	ErrMethod = errors.New("method wrong")
-// 	ErrPath   = errors.New("path wrong")
+// 	ErrPath   = erro("path wrong")
 // )
 
 // type route struct {
@@ -23,19 +23,19 @@ package router
 // }
 
 // // methods: Get, Post, Put, Delete of router created for use in other package
-// func (r *Router) Get(path string, handler Handler) {
+// func (r *Router) Get(path string, handler Handler, mode int) {
 // 	r.AddRoute(http.MethodGet, path, handler)
 // }
 
-// func (r *Router) Post(path string, handler Handler) {
+// func (r *Router) Post(path string, handler Handler, mode int) {
 // 	r.AddRoute(http.MethodPost, path, handler)
 // }
 
-// func (r *Router) Put(path string, handler Handler) {
+// func (r *Router) Put(path string, handler Handler, mode int) {
 // 	r.AddRoute(http.MethodPut, path, handler)
 // }
 
-// func (r *Router) Delete(path string, handler Handler) {
+// func (r *Router) Delete(path string, handler Handler, mode int) {
 // 	r.AddRoute(http.MethodDelete, path, handler)
 // }
 
@@ -50,10 +50,9 @@ package router
 // 		}
 // 	}
 // 	if inValidUrl {
-// 		inValidUrl = false
 // 		return nil, ErrMethod
 // 	}
-// 	return nil, ErrPath
+// 	return nil, errors.New("not foundm")
 // }
 
 // // for implementing http.Handler interface

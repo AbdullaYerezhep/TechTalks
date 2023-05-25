@@ -12,6 +12,9 @@ var (
 	ErrWrongPassword   = errors.New("wrong password")
 	ErrUserExists      = errors.New("username or password already exists")
 	// post action errors
+	ErrPostContent = errors.New("content size must be more than 10 and less ")
+	ErrPostTitle   = errors.New("title size must be more than 5 and less than 35")
 	// comment action errors
-	ErrPermission = errors.New("permission denied")
+	ErrPermission     = errors.New("permission denied")
+	ErrCommentContent = errors.New("content size must be more than 1 and less 100")
 )

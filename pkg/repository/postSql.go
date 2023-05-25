@@ -244,24 +244,61 @@ func (r *PostSQL) GetTopPostsByLikes() ([]models.Post, error) {
 	return posts, nil
 }
 
-// func (r *PostSQL) GetPostsByCategory(category string) ([]models.Post, error) {
-// 	rows, err := r.db.Query("SELECT * FROM post WHERE category = ? ORDER BY created DESC", category)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
-// 	posts := []models.Post{}
-// 	for rows.Next() {
-// 		var post models.Post
-// 		err := rows.Scan(&post.ID, &post.User_ID, &post.Author, &post.Title, &post.Content, &post.Created, &post.Updated)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		post.TimeToStr()
-// 		posts = append(posts, post)
-// 	}
-// 	if err = rows.Err(); err != nil {
-// 		return nil, err
-// 	}
-// 	return posts, err
-// }
+func (r *PostSQL) GetMyPosts(user_id int) ([]models.Post, error) {
+	query := `
+	SELECT post.*,
+    COUNT(DISTINCT comment.id) AS comment_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = 1 THEN pr.user_id || '-' || pr.post_id END) AS like_count,
+	    COUNT(DISTINCT CASE WHEN pr.islike = -1 THEN pr.user_id || '-' || pr.post_id END) AS dislike_count,
+	    GROUP_CONCAT(DISTINCT category.name) AS categories
+	FROM post
+	LEFT JOIN comment ON post.id = comment.post_id
+	LEFT JOIN post_rating AS pr ON post.id = pr.post_id
+	LEFT JOIN post_category AS pc ON post.id = pc.post_id
+	LEFT JOIN category ON pc.category_name = category.name
+	WHERE post.user_id = ?
+	GROUP BY post.id
+	ORDER by created DESC;
+	`
+	rows, err := r.db.Query(query, user_id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	posts := []models.Post{}
+	for rows.Next() {
+		var post models.Post
+		var categories sql.NullString // Use sql.NullString instead of string
+		err = rows.Scan(
+			&post.ID,
+			&post.User_ID,
+			&post.Author,
+			&post.Title,
+			&post.Content,
+			&post.CreatedAt,
+			&post.UpdatedAt,
+			&post.Comments,
+			&post.Likes,
+			&post.Dislikes,
+			&categories, // Scan as sql.NullString
+		)
+		if err != nil {
+			return nil, err
+		}
+		post.Created = post.CreatedAt.Format("02-01-2006 15:04:05")
+		if post.UpdatedAt != nil {
+			uptime := post.UpdatedAt.Format("02-01-2006 15:04:05")
+			post.Updated = &uptime
+		}
+		if categories.Valid {
+			post.Category = strings.Split(categories.String, ",")
+		} else {
+			post.Category = []string{} // Set an empty slice for NULL values
+		}
+		posts = append(posts, post)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return posts, nil
+}

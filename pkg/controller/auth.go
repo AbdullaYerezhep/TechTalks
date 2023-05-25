@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"forum/models"
 	"net/http"
 	"time"
@@ -11,13 +10,16 @@ import (
 
 func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
+		return
+	} else if r.URL.Path != "/sign-up" {
+		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, "sign-up", err.Error())
+		h.errorMsg(w, http.StatusBadRequest, "")
 		return
 	}
 
@@ -37,7 +39,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	user_id, err := h.srv.CreateUser(user)
 	if err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, errorTemp, err.Error())
+		h.errorMsg(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -45,7 +47,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	err = h.srv.CreateSession(s)
 	if err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
 	h.infoLog.Println("Session created: ", user.Name)
@@ -65,32 +67,34 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		h.errorMsg(w, http.StatusMethodNotAllowed, "error", "")
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
+		return
+	} else if r.URL.Path != "/sign-in" {
+		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusBadRequest, "error", "")
+		h.errorMsg(w, http.StatusBadRequest, "")
 		return
 	}
 	name := r.FormValue("username")
 	password := r.FormValue("password")
 
-	fmt.Println(name, password)
 	user, err := h.srv.GetUser(name, password)
 	if err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusNotFound, errorTemp, "User not found")
+		h.errorMsg(w, http.StatusNotFound, err.Error())
 		// w.Header().Set("Error-msg", err.Error())
 		return
 	}
-	
+
 	s := newSession(user.ID)
 	err = h.srv.CreateSession(s)
 	if err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
 	h.infoLog.Println("Session created: ", user.Name)
@@ -107,11 +111,19 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		h.errorMsg(w, http.StatusMethodNotAllowed, "")
+		return
+	} else if r.URL.Path != "/logout" {
+		h.errorMsg(w, http.StatusNotFound, "")
+		return
+	}
+
 	user_id := r.Context().Value(keyUser)
 	err := h.srv.DeleteSession(user_id.(int))
 	if err != nil {
 		h.errLog.Println(err.Error())
-		h.errorMsg(w, http.StatusInternalServerError, "error", "")
+		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
