@@ -20,8 +20,11 @@
        <div class="error-container">
            <h1 class="error-message">
                 {{.Status}}
-                {{.CustomText}}
-                {{.StatusText}}
+                {{if .CustomText}}
+                    {{.CustomText}}
+                {{else}}
+                    {{.StatusText}}
+                {{end}}
             <h1>
             <a class="error-button" href="/">Return</a>
         </div>

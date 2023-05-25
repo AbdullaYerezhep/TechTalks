@@ -57,7 +57,7 @@ function submitPost(body, url) {
 let checkBoxContainers = document.querySelectorAll(".checkbox-container")
 
 checkBoxContainers.forEach(checkBoxContainer => {
-    checkBoxContainer.addEventListener("click", ()=>{
+    checkBoxContainer.addEventListener("click", () => {
         checkBox(checkBoxContainer)
     })
 });

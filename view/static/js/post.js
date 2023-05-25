@@ -1,20 +1,32 @@
-// add comment under post
-let post_id = document.getElementById("post_id").innerText
-let post_user_id = document.getElementById("post_user_id").innerText
+// GLOBALS
 
-let addCommentButton = document.getElementById("addCommentBtn")
-let addCommentSubmitButton = document.getElementById("addCommentSubmitBtn")
+     const post_id = document.getElementById("post_id").innerText
+     const post_user_id = document.getElementById("post_user_id").innerText
 
-let commentLikeButtons = document.querySelectorAll(".comment-likeBtn")
-let commentDislikeButtons = document.querySelectorAll(".comment-dislikeBtn")
+     const addCommentButton = document.getElementById("addCommentBtn")
+     const addCommentSubmitButton = document.getElementById("addCommentSubmitBtn")
 
-let postContent = document.querySelector(".single-post-content")
-let editPostContent = document.getElementById("edit-single-content")
+     const commentLikeButtons = document.querySelectorAll(".comment-likeBtn")
+     const commentDislikeButtons = document.querySelectorAll(".comment-dislikeBtn")
 
-const isMyPost = userID === post_user_id
-if (isMyPost){
-    const editPost = document.getElementById("update-post")
-    const deletePost = document.getElementById("delete-post")
+     const commentAuthorElements = document.querySelectorAll(".comment-author");
+     const commentAuthorIDs = Array.from(commentAuthorElements).map(element => element.innerText);
+
+     const isMyPost = userID === post_user_id
+     const hasMyComments = commentAuthorIDs.some(comment => comment.includes(userID))
+     
+     const postContent = document.querySelector(".single-post-content")
+     const editPostContent = document.getElementById("edit-single-content")
+     
+     
+
+
+    //POSTS
+    //check if opened post author is equal to signed user
+if (isMyPost) {
+
+    const editPostButton = document.getElementById("update-post")
+    const deletePostButton = document.getElementById("delete-post")
 
     const updatePostSubmit = document.getElementById("submit-update-post")
     const discardPostSubmit = document.getElementById("discard-update-post")
@@ -22,7 +34,8 @@ if (isMyPost){
     const editContainer = document.getElementById("edit-container")
     const decisionContainer = document.getElementById("decision-container")
 
-    editPost.addEventListener("click", () => {
+    //function to open edit fields
+    editPostButton.addEventListener("click", () => {
         editContainer.classList.add("hidden")
         decisionContainer.classList.remove("hidden")
 
@@ -30,16 +43,19 @@ if (isMyPost){
         editPostContent.classList.remove("hidden")
     })
 
-    updatePostSubmit.addEventListener("click", ()=>{
+    //function to submit edited post    
+    updatePostSubmit.addEventListener("click", ()=> {
+
         editContainer.classList.remove("hidden")
         decisionContainer.classList.add("hidden")
 
         let title = document.getElementById("edit-post-title").value
         let content = document.getElementById("edit-post-content").value
+
         let body = {
-            id: +post_id,
-            title: title,
-            content: content,
+            id:         +post_id,
+            title:      title,
+            content:    content,
         }
 
         let url = "/post/edit"
@@ -50,22 +66,36 @@ if (isMyPost){
         editPostContent.classList.add("hidden")
     })
 
+
+    //function to cancel and discard changes
     discardPostSubmit.addEventListener("click", ()=>{
+        let title = document.getElementById("edit-post-title")
+        let content = document.getElementById("edit-post-content")
+
+        title.value = ""
+        content.value = ""
         editContainer.classList.remove("hidden")
         decisionContainer.classList.add("hidden")
 
         postContent.classList.remove("hidden")
         editPostContent.classList.add("hidden")
+
+
     })
 
-    deletePost.addEventListener("click", ()=>{
-        let body = {id: post_id}
+    //function to delete post on click
+    deletePostButton.addEventListener("click", ()=>{
+        let body = {id: +post_id}
         let url = "/post/delete"
         sendRequestDelete(body, url)
     })
 
 }
 
+
+//COMMENTS
+
+//function to add comment on click 
 addCommentSubmitButton.addEventListener("click", () => {
     let content = document.getElementById("new-comment").value
     let body = {content: content, post_id: +post_id}
@@ -74,10 +104,14 @@ addCommentSubmitButton.addEventListener("click", () => {
     sendRequestPost(body, url)
 })
 
+
+//function to prompt sign in on click 
 addCommentButton.addEventListener("click", () => {
     signInPrompt()
 })
 
+
+//function to like comments on click
 commentLikeButtons.forEach(button => {
     let comment_id = button.getAttribute("comment-id")
     button.addEventListener("click", () => {
@@ -91,6 +125,9 @@ commentLikeButtons.forEach(button => {
     })
 });
 
+
+
+//function to dislike comments on click
 commentDislikeButtons.forEach(button => {
     if (isAuthenticated) {
         let comment_id = button.getAttribute("comment-id")
@@ -104,40 +141,76 @@ commentDislikeButtons.forEach(button => {
     }
 });
 
-// updateComment.addEventListener("click", ()=>{
-//     let body = {}
-//     let url = ""
-//     if (isAuthenticated){
-//         signInPrompt()
-//     }else{
-//         sendRequest()
-//     }
-// })
-
-// deleteComment.addEventListener("click", ()=> {
-//     let body = {}
-//     let url = ""
-//     if (isAuthenticated){
-//         signInPrompt()
-//     }else{
-//         sendRequest()
-//     }
-// })
 
 
+// if post has comments which author is equal to signed user 
+if (hasMyComments) {
+    const editCommentButtons   = document.querySelectorAll(".edit-comment");
+    const deleteCommentButtons = document.querySelectorAll(".delete-comment");
+    const editCommentInputs    = document.querySelectorAll(".edit-comment-input");
+    const submitButtons        = document.querySelectorAll(".submit-update-post");
+    const discardButtons       = document.querySelectorAll(".discard-update-post");
+    const commentContents      = document.querySelectorAll(".my-comment-content");
+    const commentDetails       = document.querySelectorAll(".my-comment-details");
+    const commentIDsElements= document.querySelectorAll(".comment-id")
+    const commentIDs = Array.from(commentIDsElements).map(element => element.innerText);
 
 
+    editCommentButtons.forEach((button, index) => {
+        const details = commentDetails[index];
+        const editInput = editCommentInputs[index];
+        const submitButton = submitButtons[index];
+        const discardButton = discardButtons[index];
+        const commentContent = commentContents[index].innerText;
+        const mycomment = commentContents[index]
+        const commentID = commentIDs[index]
 
-// rateComment.addEventListener("click", ()=>{
-//     let body = {}
-//     let url = ""
-//     if (isAuthenticated){
-//         signInPrompt()
-//     }else{
-//         sendRequest()
-//     }
-// })
+        button.addEventListener("click", () => {
+            details.open = false;
+            editInput.classList.remove("hidden");
+            mycomment.classList.add("hidden")
+        });
 
+        submitButton.addEventListener("click", () => {
+            const updatedComment = editInput.value;
+            editInput.classList.add("hidden");
+            mycomment.classList.remove("hidden")
+            let body = {
+                id:         +commentID,
+                post_id:    +post_id,
+                content:    updatedComment
+            }
+
+            let url = "/comment/edit"
+            sendRequestEdit(body, url)
+        });
+
+        discardButton.addEventListener("click", () => {
+            editInput.value = commentContent;
+        });
+    
+        
+    });
+    
+    deleteCommentButtons.forEach((deleteButton, index) => {
+        const details = commentDetails[index];
+        const commentID = commentIDs[index]
+        deleteButton.addEventListener("click", () => {
+            details.open = false;
+            const body = {
+                id:         +commentID,
+                post_id:    +post_id,
+            }
+            const url = "/comment/delete"
+            sendRequestDelete(body, url)
+
+        });
+    });
+    
+}
+
+
+//REQUEST TO THE SERVER
 
 function sendRequestEdit(body, url) {
     fetch(url, {
@@ -149,6 +222,7 @@ function sendRequestEdit(body, url) {
     })
     .then(response => {
         if (response.ok) {
+            alert("Succesfully updated")
             location.reload()
         } else {
             alert("Failed to update")
