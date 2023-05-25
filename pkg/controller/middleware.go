@@ -72,7 +72,6 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 
 func (h *Handler) decodeRequest(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		if r.Method == http.MethodGet {
 			next.ServeHTTP(w, r)
 			return

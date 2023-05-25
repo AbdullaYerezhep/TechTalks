@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"forum/models"
 	"forum/pkg/repository"
 	"time"
@@ -40,6 +41,7 @@ func (s *CommentService) UpdateComment(user_id int, updatedCom models.Comment) e
 	com.Content = updatedCom.Content
 	current_time := time.Now().Format("02-01-2006 15:04")
 	com.Updated = &current_time
+	fmt.Println(updatedCom.Content)
 
 	return s.repo.UpdateComment(com)
 }

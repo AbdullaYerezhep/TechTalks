@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"forum/models"
 	"net/http"
 	"time"
@@ -42,12 +43,12 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 
 	s := newSession(user_id)
 	err = h.srv.CreateSession(s)
-
 	if err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusInternalServerError, "error", "")
 		return
 	}
+	h.infoLog.Println("Session created: ", user.Name)
 
 	c := &http.Cookie{
 		Name:    "token",
@@ -76,6 +77,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("username")
 	password := r.FormValue("password")
 
+	fmt.Println(name, password)
 	user, err := h.srv.GetUser(name, password)
 	if err != nil {
 		h.errLog.Println(err.Error())
