@@ -94,9 +94,10 @@
         {{if .User}}
             <div class="comments">
                 {{range .Comments}}
-                    {{if eq $.User.ID .User_ID}}
-                        <div class="comment-author">{{.User_ID}}</div>
-                        <div class="my-comment">
+                {{if eq $.User.ID .User_ID}}
+                <div class="comment-id" hidden>{{.ID}}</div>
+                <div class="comment-author" hidden>{{.User_ID}}</div>
+                <div class="my-comment">
                             <div class="my-comment-body">
                                 <div class="my-comment-author">
                                     You commented:
@@ -104,12 +105,23 @@
                                 <div class="my-comment-content">
                                     {{.Content}}
                                 </div>
+                                <div class="edit-comment-input hidden">
+                                    <input type="text" class="update-comment-input">
+                                    <div class="desicion-comment">
+                                        <span class="submit-update-post">
+                                            ✔️
+                                        </span>
+                                        <span class="discard-update-post">
+                                            X
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <details class="my-comment-details">
                                 <summary>Edit</summary>
                                 <div class="details-content">
-                                    <button class="edit-comment">{{template "update" .}}</button>
-                                    <button class="delete-comment">{{template "delete" .}}</button>
+                                    <button  class="edit-comment">{{template "update" .}}</button>
+                                    <button  class="delete-comment">{{template "delete" .}}</button>
                                 </div>
                             </details>
                             <div class="rating">
@@ -124,7 +136,7 @@
                             </div>
                         </div>
                     {{else}}
-                        <div class="comment-author">{{.User_ID}}</div>
+                        <div class="comment-author" hidden>{{.User_ID}}</div>
                         <div class="else-comment">
                             <div class="else-comment-body">
                                 <div class="else-comment-author">
@@ -149,6 +161,7 @@
                 {{end}}
         {{else}}
             {{range .Comments}}
+                <div class="comment-author" hidden>{{.User_ID}}</div>
                 <div class="comment">
                         <div class="comment-body">
                             <div class="comment-author">
@@ -169,9 +182,9 @@
                             </div>
                         </div>
                 </div>
-                {{end}}
-                {{end}}
-            </div>
+            {{end}}
+        {{end}}
+        </div>
     </div>
 </div>
 {{end}}

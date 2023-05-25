@@ -19,8 +19,9 @@ console.log(isAuthenticated);
 
 if (isAuthenticated){
     const myPostsButton = document.querySelector(".headerMyPosts")
-    
+    const headerDetails = document.querySelector(".header-details")
     myPostsButton.addEventListener("click", () => {
+        headerDetails.open = false
         filterMyPosts()
     })
     
