@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"forum/models"
 	"net/http"
 	"net/url"
@@ -61,19 +60,20 @@ func (h *Handler) postDetails(w http.ResponseWriter, r *http.Request) {
 	} else if r.URL.Path != "/post/" {
 		h.errorMsg(w, http.StatusNotFound, "")
 	}
-	var data models.PostPageData
-	user_id := r.Context().Value(keyUser)
 
-	if user_id != nil {
-		user, err := h.srv.GetUserByID(user_id.(int))
+	var data models.PostPageData
+
+	id := r.Context().Value(keyUser)
+	if id != nil {
+		user, err := h.srv.GetUserByID(id.(int))
 		if err != nil {
-			if err == sql.ErrNoRows {
-				data.User = &user
-			} else {
-				h.errLog.Println(err.Error())
-			}
+			h.errLog.Println(err.Error())
+			h.errorMsg(w, http.StatusInternalServerError, "")
+			return
 		}
+		data.User = &user
 	}
+
 	queryParams, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
 		h.errLog.Println(err.Error())

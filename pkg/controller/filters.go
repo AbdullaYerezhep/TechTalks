@@ -61,7 +61,16 @@ func (h *Handler) MyPosts(w http.ResponseWriter, r *http.Request) {
 
 	var data models.HomePage
 
-	id := r.Context().Value(keyUser).(int)
+	id, ok := r.Context().Value(keyUser).(int)
+	if ok {
+		user, err := h.srv.GetUserByID(id)
+		if err != nil {
+			h.errLog.Println(err.Error())
+			h.errorMsg(w, http.StatusInternalServerError, "")
+			return
+		}
+		data.User = user
+	}
 
 	posts, err := h.srv.GetMyPosts(id)
 	if err != nil {
