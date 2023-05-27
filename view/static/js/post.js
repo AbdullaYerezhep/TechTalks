@@ -17,14 +17,13 @@
      
      const postContent = document.querySelector(".single-post-content")
      const editPostContent = document.getElementById("edit-single-content")
-     
+     console.log(isAuthenticated);
      
 
 
     //POSTS
     //check if opened post author is equal to signed user
 if (isMyPost) {
-
     const editPostButton = document.getElementById("update-post")
     const deletePostButton = document.getElementById("delete-post")
 
@@ -79,17 +78,16 @@ if (isMyPost) {
 
         postContent.classList.remove("hidden")
         editPostContent.classList.add("hidden")
-
-
     })
 
     //function to delete post on click
     deletePostButton.addEventListener("click", ()=>{
-        let body = {id: +post_id}
+        let body = {
+            id: +post_id
+        }
         let url = "/post/delete"
-        sendRequestDelete(body, url)
+        sendRequestDelete(body, url, "/")
     })
-
 }
 
 
@@ -98,9 +96,11 @@ if (isMyPost) {
 //function to add comment on click 
 addCommentSubmitButton.addEventListener("click", () => {
     let content = document.getElementById("new-comment").value
-    let body = {content: content, post_id: +post_id}
+    let body = {
+        content: content, post_id: +post_id
+    }
     let url = "/comment"
-    content.value = ''
+    document.getElementById("new-comment").value = '';
     sendRequestPost(body, url)
 })
 
@@ -147,9 +147,10 @@ commentDislikeButtons.forEach(button => {
 if (hasMyComments) {
     const editCommentButtons   = document.querySelectorAll(".edit-comment");
     const deleteCommentButtons = document.querySelectorAll(".delete-comment");
+    const updateCommentInputs    = document.querySelectorAll(".update-comment-input");
     const editCommentInputs    = document.querySelectorAll(".edit-comment-input");
-    const submitButtons        = document.querySelectorAll(".submit-update-post");
-    const discardButtons       = document.querySelectorAll(".discard-update-post");
+    const submitButtons        = document.querySelectorAll(".submit-update-comment");
+    const discardButtons       = document.querySelectorAll(".discard-update-comment");
     const commentContents      = document.querySelectorAll(".my-comment-content");
     const commentDetails       = document.querySelectorAll(".my-comment-details");
     const commentIDsElements= document.querySelectorAll(".comment-id")
@@ -158,6 +159,7 @@ if (hasMyComments) {
 
     editCommentButtons.forEach((button, index) => {
         const details = commentDetails[index];
+        const updateInput = updateCommentInputs[index];
         const editInput = editCommentInputs[index];
         const submitButton = submitButtons[index];
         const discardButton = discardButtons[index];
@@ -172,12 +174,11 @@ if (hasMyComments) {
         });
 
         submitButton.addEventListener("click", () => {
-            const updatedComment = editInput.value;
+            const updatedComment = updateInput.value;
             editInput.classList.add("hidden");
             mycomment.classList.remove("hidden")
             let body = {
                 id:         +commentID,
-                post_id:    +post_id,
                 content:    updatedComment
             }
 
@@ -186,7 +187,9 @@ if (hasMyComments) {
         });
 
         discardButton.addEventListener("click", () => {
-            editInput.value = commentContent;
+            updateInput.value = commentContent;
+            editInput.classList.add("hidden");
+            mycomment.classList.remove("hidden")
         });
     
         
@@ -234,17 +237,21 @@ function sendRequestEdit(body, url) {
     });
 }
 
-function sendRequestDelete(body, url) {
+function sendRequestDelete(body, url, endpoint) {
     fetch(url, {
             method: "DELETE",
             body: JSON.stringify(body),
             headers: {
             "Content-Type": "application/json"
-        }
+            }
     })
     .then(response => {
         if (response.ok) {
-            location.reload()
+            if (endpoint === undefined) {
+                location.reload()
+            }else{
+                window.location.href = endpoint
+            }
         } else {
             console.error("Failed to delete");
             alert("failed to delete")
