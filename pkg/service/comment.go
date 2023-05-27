@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"forum/models"
 	"forum/pkg/repository"
 	"time"
@@ -17,6 +16,9 @@ func NewComment(repo repository.Comment) *CommentService {
 
 func (s *CommentService) AddComment(com models.Comment) error {
 	com.Created = time.Now().Format("02-01-2006 15:04")
+	if err := isValidCommentContent(com); err != nil {
+		return err
+	}
 	return s.repo.AddComment(com)
 }
 
@@ -41,8 +43,9 @@ func (s *CommentService) UpdateComment(user_id int, updatedCom models.Comment) e
 	com.Content = updatedCom.Content
 	current_time := time.Now().Format("02-01-2006 15:04")
 	com.Updated = &current_time
-	fmt.Println(updatedCom.Content)
-
+	if err := isValidCommentContent(com); err != nil {
+		return err
+	}
 	return s.repo.UpdateComment(com)
 }
 

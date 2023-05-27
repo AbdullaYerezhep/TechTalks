@@ -64,7 +64,23 @@
     align-items: flex-start;
     gap:10px;
 }
+.post-categories {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  
+  .post-category {
+    background-color: #ccc;
+    color: #333;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
 
+  
 .add-comment {
     border: 1px solid #5f5f5f8f;
     padding: 30px;

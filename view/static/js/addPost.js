@@ -10,7 +10,12 @@
 // }
 
 // send request to server for adding post 
-
+function isEmpty(content) {
+    if (content === "" || content === null || content === undefined || content.length === 0) {
+        return true
+    }
+    return false
+}
 let addPostButton = document.getElementById("addPostSubmit")
 
 addPostButton.addEventListener("click", () =>{
@@ -22,10 +27,16 @@ addPostButton.addEventListener("click", () =>{
     let url = "/post/add"
     let body = {
         categories: categoryValues,
-        title:title,
+        title: title,
         content:content, 
     }
-    submitPost(body, url)
+
+    if(isEmpty(content) || isEmpty(title) || isEmpty(categories)) {
+        alert("Form cannot be empty!")
+        return
+    }else{
+        submitPost(body, url)
+    }
 })
 
 function submitPost(body, url) {

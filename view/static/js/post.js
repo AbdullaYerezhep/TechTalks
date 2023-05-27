@@ -19,7 +19,7 @@
      const editPostContent = document.getElementById("edit-single-content")
      console.log(isAuthenticated);
      
-
+     
 
     //POSTS
     //check if opened post author is equal to signed user
@@ -58,11 +58,15 @@ if (isMyPost) {
         }
 
         let url = "/post/edit"
+        if(isEmpty(content)){
+            alert("Comment cannot be empty!")
+            return
+        }else{
+            sendRequestEdit(body, url)
 
-        sendRequestEdit(body, url)
-
-        postContent.classList.remove("hidden")
-        editPostContent.classList.add("hidden")
+            postContent.classList.remove("hidden")
+            editPostContent.classList.add("hidden")
+        }
     })
 
 
@@ -92,16 +96,26 @@ if (isMyPost) {
 
 
 //COMMENTS
-
+function isEmpty(content) {
+    if (content === "" || content === null || content === undefined) {
+        return true
+    }
+    return false
+}
 //function to add comment on click 
 addCommentSubmitButton.addEventListener("click", () => {
     let content = document.getElementById("new-comment").value
     let body = {
         content: content, post_id: +post_id
     }
-    let url = "/comment"
-    document.getElementById("new-comment").value = '';
-    sendRequestPost(body, url)
+    if(isEmpty(content)){
+        alert("Comment cannot be empty!")
+        return
+    }else{
+        let url = "/comment"
+        document.getElementById("new-comment").value = '';
+        sendRequestPost(body, url)
+    }
 })
 
 
@@ -183,7 +197,13 @@ if (hasMyComments) {
             }
 
             let url = "/comment/edit"
+
+            if(isEmpty(updatedComment)){
+                alert("Comment cannot be empty!")
+                return
+            }else{
             sendRequestEdit(body, url)
+            }
         });
 
         discardButton.addEventListener("click", () => {
@@ -268,8 +288,8 @@ function sendRequestPost(body, url) {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
-            "Content-Type": "application/json"
-        }
+                "Content-Type": "application/json"
+            }
     })
     .then(response => {
         if (response.ok) {

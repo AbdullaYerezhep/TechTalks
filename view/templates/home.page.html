@@ -39,8 +39,8 @@
                     {{end}} 
                 </div>
                 <div class="post-author">Posted by: {{.Author}} at {{.Created}}</div>
-                <div class="post-title">{{ .Title }}</div>
-                <div class="post-text"><p>{{.Content}}</p></div>
+                <div class="post-title text">{{ .Title }}</div>
+                <div class="post-text"><p class="text">{{.Content}}</p></div>
                 {{if .Updated}}
                 <div class="post-update">Last update: {{.Updated}}</div>
                 {{end}}

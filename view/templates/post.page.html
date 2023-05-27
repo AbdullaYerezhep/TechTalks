@@ -61,14 +61,14 @@
             </div>
         </div>
         <div class="single-post-content">
-            <div class="single-post-categories">
+            <div class="post-categories">
                 {{range .Post.Category}}
-                <div class="single-post-category">{{.}}</div>
+                <div class="post-category">{{.}}</div>
                 {{end}}
             </div>
             <div class="single-post-author"> Posted by: {{.Post.Author}} at {{.Post.Created}}</div>
-            <div class="single-post-title">{{.Post.Title }}</div>
-            <div class="single-post-content"><p>{{.Post.Content}}</p></div>
+            <div class="single-post-title text" >{{.Post.Title }}</div>
+            <div class="single-post-content"><p class="text">{{.Post.Content}}</p></div>
             {{if .Updated}}
             <div class="single-post-update">Last update: {{.Post.Updated}}</div>
             {{end}}
@@ -104,7 +104,7 @@
                                 <div class="my-comment-author">
                                     You commented:
                                 </div>
-                                <div class="my-comment-content">
+                                <div class="my-comment-content text">
                                     {{.Content}}
                                 </div>
                                 <div class="edit-comment-input hidden">
@@ -144,7 +144,7 @@
                                 <div class="else-comment-author">
                                     {{.Author}} commented:
                                 </div>
-                                <div class="else-comment-content">
+                                <div class="else-comment-content text">
                                     {{.Content}}
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                             <div class="comment-author">
                                 {{.Author}} commented:
                             </div>
-                            <div class="comment-content">
+                            <div class="comment-content text">
                                 {{.Content}}
                             </div>
                         </div>

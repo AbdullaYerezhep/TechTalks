@@ -103,3 +103,8 @@ a {
 .hidden {
   display: none;
 }
+
+
+.text {
+  word-break: break-word;
+}

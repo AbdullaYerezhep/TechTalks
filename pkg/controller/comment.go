@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"forum/models"
 	"net/http"
 )
@@ -10,7 +9,7 @@ func (h *Handler) addComment(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
-	} else if r.URL.Path != "/comment/add" {
+	} else if r.URL.Path != "/comment" {
 		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
@@ -38,7 +37,7 @@ func (h *Handler) editComment(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
-	} else if r.URL.Path != "/comment/add" {
+	} else if r.URL.Path != "/comment/edit" {
 		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
@@ -50,7 +49,6 @@ func (h *Handler) editComment(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
-	fmt.Println(com)
 
 	if err := h.srv.UpdateComment(user_id.(int), com); err != nil {
 		h.errLog.Println(err.Error())
@@ -66,7 +64,7 @@ func (h *Handler) deleteComment(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
-	} else if r.URL.Path != "/comment/add" {
+	} else if r.URL.Path != "/comment/delete" {
 		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}

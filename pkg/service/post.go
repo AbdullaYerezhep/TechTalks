@@ -29,6 +29,10 @@ func (s *PostService) CreatePost(p models.Post) error {
 		return fmt.Errorf("invalid category %s", cat)
 	}
 	p.CreatedAt = time.Now()
+	if err = isValidPostContent(p); err != nil {
+		return err
+	}
+
 	return s.repo.CreatePost(p)
 }
 
@@ -75,7 +79,9 @@ func (s *PostService) UpdatePost(user_id int, updatedPost models.Post) error {
 	post.Content = updatedPost.Content
 	now := time.Now()
 	post.UpdatedAt = &now
-
+	if err = isValidPostContent(post); err != nil {
+		return err
+	}
 	return s.repo.UpdatePost(post)
 }
 

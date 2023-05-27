@@ -65,3 +65,40 @@ function submitRating(body, url) {
     });
 }
 
+const headerSignOut = document.querySelector(".headerSignOut")
+
+const menuSignOut = document.querySelector(".menuSignOut")
+
+
+if (isAuthenticated){
+    headerSignOut.addEventListener("click", ()=>{
+        sendPostRequest()
+    })
+    
+    menuSignOut.addEventListener("click", ()=>{
+        sendPostRequest()
+    })
+}
+
+
+
+function sendPostRequest() {
+    var url = "/logout";
+  
+    fetch(url, {
+      method: "POST",
+    })
+    .then(response => {
+        window.location.href = "/"
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+function isEmpty(content) {
+    if (content === "" || content === null || content === undefined) {
+        return true
+    }
+    return false
+}

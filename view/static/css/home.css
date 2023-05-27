@@ -206,7 +206,7 @@
   transition: max-height 0.3s ease-out;
 }
 
-.header-details a {
+.header-details span {
     text-decoration: none;
     color: #EDEDED;
 }
@@ -221,7 +221,7 @@
     cursor: pointer;
 }
 
-.header-details a:hover {
+.header-details span:hover {
     background-color: #adadad;
     cursor: pointer;
 }
