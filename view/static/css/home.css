@@ -1,4 +1,3 @@
-
 #body {
     width: 100%;
     height: 100vh;
@@ -212,16 +211,17 @@
     color: #EDEDED;
 }
 
-.header-details span {
+.header-details a {
     text-decoration: none;
     color: #EDEDED;
 }
 
 .header-details a:hover {
     background-color: #adadad;
+    cursor: pointer;
 }
 
-.header-details span:hover {
+.header-details a:hover {
     background-color: #adadad;
     cursor: pointer;
 }

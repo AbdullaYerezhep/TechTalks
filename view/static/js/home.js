@@ -13,25 +13,6 @@ function openPost(post) {
     window.location.href = "/post/?id="+id
 }
 
-if (isAuthenticated){
-  const myPostsButton = document.querySelector(".headerMyPosts")
-  const headerDetails = document.querySelector(".header-details")
-  myPostsButton.addEventListener("click", (e) => {
-    headerDetails.open = false;
-      e.preventDefault();
-      fetch("/", {
-        method:"GET",
-        headers : {
-          "Content-Type": "application/json"
-        }
-      })
-  });
-}
-
-// // my posts logic
-// console.log(isAuthenticated);
-
-
 // categories filter 
 
 let checkBoxContainers = document.querySelectorAll(".menu-checkbox-container");
