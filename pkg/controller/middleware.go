@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	defaultMode  = 0
-	redirectMode = 1
+	defaultMode = 0
 )
 
 type ctxKey string
@@ -23,28 +22,27 @@ const (
 	keyRequest = ctxKey("requestData")
 )
 
-// Middleware "checkAccess" works on two modes. If it doesn't validate the token.
-// 1. It redirects client to sign-in page
-// 2. It still passes to the next HandlerFunc but without any data.
-// If it does validate the token passes to the next HandlerFunc with user_id in context.
 func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := r.Cookie("token")
-		if err == http.ErrNoCookie {
-			if mode == defaultMode {
-				next.ServeHTTP(w, r)
-				return
+		if err != nil {
+			if errors.Is(err, http.ErrNoCookie) {
+				if mode == defaultMode {
+					next.ServeHTTP(w, r)
+					return
+				} else {
+					w.WriteHeader(http.StatusUnauthorized)
+					return
+				}
 			} else {
 				h.errLog.Println(err.Error())
 				return
 			}
-			w.WriteHeader(http.StatusUnauthorized)
-			return
 		}
+
 		session, err := h.srv.Session.GetSession(token.Value)
 		if err != nil {
-			if !errors.Is(err, sql.ErrNoRows) {
-				h.errLog.Println(err.Error())
+			if errors.Is(err, sql.ErrNoRows) {
 				c := &http.Cookie{
 					Name:     "token",
 					Value:    "",
@@ -53,14 +51,14 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 					HttpOnly: true,
 				}
 				http.SetCookie(w, c)
-				http.Redirect(w, r, "/", http.StatusSeeOther)
+				if mode == defaultMode {
+					next.ServeHTTP(w, r)
+					return
+				} else {
+					w.WriteHeader(http.StatusUnauthorized)
+					return
+				}
 			}
-			if mode == defaultMode {
-				next.ServeHTTP(w, r)
-				return
-			}
-			w.WriteHeader(http.StatusUnauthorized)
-			return
 		}
 
 		if session.Expiration_date.Before(time.Now()) {

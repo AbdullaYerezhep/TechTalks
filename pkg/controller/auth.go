@@ -112,14 +112,13 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodGet {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
 	} else if r.URL.Path != "/logout" {
 		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
-	fmt.Println("LOFOUTED")
 
 	user_id, ok := r.Context().Value(keyUser).(int)
 	if !ok {
