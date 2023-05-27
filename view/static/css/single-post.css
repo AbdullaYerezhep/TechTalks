@@ -7,6 +7,53 @@
     padding: 20px;
 }
 
+#edit-single-content {
+    width:100%;
+}
+
+#edit-post-title{
+    padding: 10px 15px;
+    width:90%;
+    margin-bottom: 10px;
+    border: 1px solid #6d6d6dbd;
+    background-color: #1f1f1f;
+    color:#f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  #edit-post-content{
+    width: 90%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #6d6d6dbd;
+    background-color: #1f1f1f;
+    color:#f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .update-comment-input{
+    width: 90%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #6d6d6dbd;
+    background-color: #1f1f1f;
+    color:#f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #submit-update-post:hover {
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+  }
+
+  #discard-update-post:hover {
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+  }
+
 .single-post {
     border: 1px solid #5f5f5f8f;
     padding: 10px;
@@ -184,17 +231,20 @@
     position:relative;
 }
 
-.my-comment-details{
+.my-comment-details {
     width:50px;
     align-self: start;
     margin-left:50px;
     position:absolute;
-    right: -3px;
-    top: 55px;
+    right: 0;
+    top: 0;
 }
 
 .my-comment-details {
     overflow: hidden;
+}
+.my-comment-details:hover{
+    cursor:pointer;
 }
 
 .details-content {
@@ -226,6 +276,16 @@
     height:15px;
 }
 
+.edit-comment:hover{
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+}
+
+.delete-comment:hover{
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+}
+
 .comment {
     width:100%;
     background-color: #1f1f1f;
@@ -246,3 +306,19 @@
     margin-left:10px;
 }
 
+.decision-comment {
+    display:flex;
+    gap: 5px;
+    width: 95%;
+    justify-content: end;
+}
+
+.submit-update-comment:hover{
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+}
+
+.discard-update-comment:hover{
+    cursor:pointer;
+    background-color: #5f5f5f8f;
+  }

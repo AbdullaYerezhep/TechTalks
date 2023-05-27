@@ -18,7 +18,7 @@
 <div id="overlay"></div>
 <div id="post_id" hidden>{{.Post.ID}}</div>
 <div id="post_user_id" hidden>{{.Post.User_ID}}</div>   
-<div id="user_id" user-id={{if .User}}{{.User.ID}}{{end}} hidden></div>
+<div id="user_id" user-id="{{if .User}}{{.User.ID}}{{end}}" hidden></div>
 <div class="single-post-container">
     <div class="single-post-actions">
         {{if .User}}
@@ -33,10 +33,10 @@
             </div>
             <div id="decision-container" class="hidden">
                 <span id="submit-update-post">
-                    ✔️
+                    ✅
                 </span>
                 <span id="discard-update-post">
-                    X
+                    ❌
                 </span>
             </div>
             {{end}}
@@ -106,15 +106,15 @@
                                     {{.Content}}
                                 </div>
                                 <div class="edit-comment-input hidden">
-                                    <input type="text" class="update-comment-input">
-                                    <div class="desicion-comment">
-                                        <span class="submit-update-post">
-                                            ✔️
+                                    <div class="decision-comment">
+                                        <span class="submit-update-comment">
+                                            ✅
                                         </span>
-                                        <span class="discard-update-post">
-                                            X
+                                        <span class="discard-update-comment">
+                                            ❌
                                         </span>
                                     </div>
+                                    <input type="text" class="update-comment-input">
                                 </div>
                             </div>
                             <details class="my-comment-details">
@@ -190,9 +190,9 @@
 {{end}}
 
 {{define "scripts"}}
-   <script src="/static/js/script.js"></script>
-   <script src="/static/js/post.js"></script>
-   <script src="/static/js/global.js"></script>
+<script src="/static/js/script.js"></script>
+<script src="/static/js/post.js"></script>
+<script src="/static/js/global.js"></script>
 {{end}}
 
 

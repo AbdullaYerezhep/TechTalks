@@ -1,5 +1,4 @@
 // Authentication logic
-
 document.querySelectorAll(".signInButton").forEach(signIn =>{
     signIn.addEventListener("click", function() {
         toggleContainerVisibility("signInContainer");

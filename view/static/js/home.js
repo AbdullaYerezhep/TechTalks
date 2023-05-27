@@ -13,30 +13,24 @@ function openPost(post) {
     window.location.href = "/post/?id="+id
 }
 
-
-// my posts logic
-console.log(isAuthenticated);
-
 if (isAuthenticated){
-    const myPostsButton = document.querySelector(".headerMyPosts")
-    const headerDetails = document.querySelector(".header-details")
-    myPostsButton.addEventListener("click", () => {
-        headerDetails.open = false
-        filterMyPosts()
-    })
-    
-    const filterMyPosts = () => {
-        posts.forEach(post => {
-            let authorID = post.querySelector(".author-id").getAttribute("author");
-            if (authorID !== userID) {
-                post.style.display = "none"
-            }else{
-                post.style.display = "flex"
-            }
-        })
-        
-    }
+  const myPostsButton = document.querySelector(".headerMyPosts")
+  const headerDetails = document.querySelector(".header-details")
+  myPostsButton.addEventListener("click", (e) => {
+    headerDetails.open = false;
+      e.preventDefault();
+      fetch("/", {
+        method:"GET",
+        headers : {
+          "Content-Type": "application/json"
+        }
+      })
+  });
 }
+
+// // my posts logic
+// console.log(isAuthenticated);
+
 
 // categories filter 
 
