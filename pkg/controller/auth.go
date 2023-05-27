@@ -112,7 +112,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		h.errorMsg(w, http.StatusMethodNotAllowed, "")
 		return
 	} else if r.URL.Path != "/logout" {
@@ -134,7 +134,7 @@ func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Session deleted")
-	http.Redirect(w, r, "/", http.StatusFound)
+	w.WriteHeader(http.StatusOK)
 }
 
 func newSession(user_id int) models.Session {
