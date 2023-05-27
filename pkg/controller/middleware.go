@@ -45,6 +45,15 @@ func (h *Handler) checkAccess(next http.HandlerFunc, mode int) http.HandlerFunc 
 		if err != nil {
 			if !errors.Is(err, sql.ErrNoRows) {
 				h.errLog.Println(err.Error())
+				c := &http.Cookie{
+					Name:     "token",
+					Value:    "",
+					Path:     "/",
+					MaxAge:   -1,
+					HttpOnly: true,
+				}
+				http.SetCookie(w, c)
+				http.Redirect(w, r, "/", http.StatusSeeOther)
 			}
 			if mode == defaultMode {
 				next.ServeHTTP(w, r)

@@ -27,7 +27,7 @@ func (h *Handler) Router() *http.ServeMux {
 
 	mux.HandleFunc("/sign-in", h.signIn)
 	mux.HandleFunc("/sign-up", h.signUp)
-	mux.HandleFunc("/logout", h.checkAccess(h.logOut, 0))
+	mux.HandleFunc("/logout", h.checkAccess(h.logOut, 1))
 
 	mux.HandleFunc("/", h.checkAccess(h.home, 0))
 	mux.HandleFunc("/popular", h.checkAccess(h.homeFilteredByLikes, 0))

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"forum/models"
 	"net/http"
 	"time"
@@ -118,14 +119,22 @@ func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
 		h.errorMsg(w, http.StatusNotFound, "")
 		return
 	}
+	fmt.Println("LOFOUTED")
 
-	user_id := r.Context().Value(keyUser)
-	err := h.srv.DeleteSession(user_id.(int))
+	user_id, ok := r.Context().Value(keyUser).(int)
+	if !ok {
+		h.errLog.Println("Context user")
+		h.errorMsg(w, http.StatusInternalServerError, "")
+		return
+	}
+	err := h.srv.DeleteSession(user_id)
 	if err != nil {
 		h.errLog.Println(err.Error())
 		h.errorMsg(w, http.StatusInternalServerError, "")
 		return
 	}
+
+	fmt.Println("Session deleted")
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
