@@ -32,6 +32,6 @@ To run this project locally, make sure you have the following installed:
     make stop
     ```
 ## Authors
-freer,
-Abdulla Yerezhep,
-Meirbek Ashirbayev
+- freer,
+- Abdulla Yerezhep,
+- Meirbek Ashirbayev
