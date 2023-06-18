@@ -33,5 +33,5 @@ To run this project locally, make sure you have the following installed:
     ```
 ## Authors
 freer,
-Creata21,
-MeirbekAshirbayev
+Abdulla Yerezhep,
+Meirbek Ashirbayev
